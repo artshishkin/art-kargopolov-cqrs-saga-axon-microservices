@@ -1,10 +1,15 @@
 package net.shyshkin.study.cqrs.estore.productservice.rest;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/products")
+@RequiredArgsConstructor
 public class ProductController {
+
+    private final Environment environment;
 
     @PostMapping
     public String createProduct() {
@@ -13,7 +18,10 @@ public class ProductController {
 
     @GetMapping
     public String getProduct() {
-        return "Http GET is handled";
+        Integer serverPort = environment.getProperty("local.server.port", Integer.class);
+        String appName = environment.getProperty("spring.application.name");
+
+        return "Http GET on " + appName + ":" + serverPort;
     }
 
     @PutMapping
