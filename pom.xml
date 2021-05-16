@@ -8,5 +8,11 @@
     <artifactId>art-kargopolov-cqrs-saga-axon-microservices</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>product-service</module>
+    </modules>
+
 
 </project>
