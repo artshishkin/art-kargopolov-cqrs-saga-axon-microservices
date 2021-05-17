@@ -3,16 +3,15 @@ package net.shyshkin.study.cqrs.estore.productservice.rest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.math.BigDecimal;
 
-import static org.hamcrest.CoreMatchers.endsWith;
 import static org.hamcrest.CoreMatchers.startsWith;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -21,10 +20,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @Slf4j
 @SpringBootTest
-@TestPropertySource(properties = {
-        "axon.axonserver.enabled=false"
-})
-class ProductControllerTest {
+@DisplayName("Start axon-server docker-compose file first")
+//@Disabled("Only for manual testing")
+class ProductControllerManualTest {
 
     MockMvc mockMvc;
 
@@ -40,7 +38,7 @@ class ProductControllerTest {
     }
 
     @Test
-    void createProduct() throws Exception {
+    void createProduct_correct() throws Exception {
 
         //given
         CreateProductRestModel createProductRestModel = CreateProductRestModel.builder()
@@ -57,8 +55,7 @@ class ProductControllerTest {
 
                 //then
                 .andExpect(status().isOk())
-                .andExpect(content().string(startsWith("Http POST: CreateProductCommand(productId=")))
-                .andExpect(content().string(endsWith(", title=iPhone 3, price=125.0, quantity=2)")))
+                .andExpect(content().string(startsWith("Http POST: ")))
         ;
     }
 }
