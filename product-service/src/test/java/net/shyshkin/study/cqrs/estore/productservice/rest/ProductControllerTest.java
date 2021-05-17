@@ -2,26 +2,42 @@ package net.shyshkin.study.cqrs.estore.productservice.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.math.BigDecimal;
 
+import static org.hamcrest.CoreMatchers.endsWith;
+import static org.hamcrest.CoreMatchers.startsWith;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Slf4j
-@WebMvcTest(ProductController.class)
+@SpringBootTest
+@TestPropertySource(properties = {
+        "axon.axonserver.enabled=false"
+})
 class ProductControllerTest {
 
-    @Autowired
     MockMvc mockMvc;
 
     @Autowired
+    ProductController controller;
+
+    @Autowired
     ObjectMapper objectMapper;
+
+    @BeforeEach
+    void setUp() {
+        mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
+    }
 
     @Test
     void createProduct() throws Exception {
@@ -40,7 +56,9 @@ class ProductControllerTest {
                 .content(jsonPayload))
 
                 //then
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().string("Http POST: CreateProductRestModel(title=iPhone 3, price=125.0, quantity=2)"));
+                .andExpect(status().isOk())
+                .andExpect(content().string(startsWith("Http POST: CreateProductCommand(productId=")))
+                .andExpect(content().string(endsWith(", title=iPhone 3, price=125.0, quantity=2)")))
+        ;
     }
 }
