@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+#  docker run -d --name axonserver -p 8024:8024 -p 8124:8124 axoniq/axonserver
+  axon-server:
+    image: axoniq/axonserver
+    ports:
+    - 8024:8024
+    - 8124:8124
+    volumes:
+    - axon-data:/data
+    - axon-eventdata:/eventdata
+    - C:\Users\Admin\IdeaProjects\Study\SergeyKargopolov\CQRS_SAGA_Axon_Microservices\art-kargopolov-cqrs-saga-axon-microservices\axon-server\config:/config
+
+volumes:
+  axon-data:
+  axon-eventdata:
+
+
+
+
