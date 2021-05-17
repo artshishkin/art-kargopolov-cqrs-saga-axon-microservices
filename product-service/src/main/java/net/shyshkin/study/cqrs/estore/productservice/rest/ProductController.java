@@ -3,6 +3,7 @@ package net.shyshkin.study.cqrs.estore.productservice.rest;
 import lombok.RequiredArgsConstructor;
 import net.shyshkin.study.cqrs.estore.productservice.command.CreateProductCommand;
 import net.shyshkin.study.cqrs.estore.productservice.mapper.ProductMapper;
+import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,11 +14,20 @@ public class ProductController {
 
     private final Environment environment;
     private final ProductMapper mapper;
+    private final CommandGateway commandGateway;
 
     @PostMapping
     public String createProduct(@RequestBody CreateProductRestModel createProductRestModel) {
         CreateProductCommand createProductCommand = mapper.toCreateCommand(createProductRestModel);
-        return "Http POST: " + createProductCommand;
+
+        String returnValue;
+        try {
+            returnValue = commandGateway.sendAndWait(createProductCommand);
+        } catch (Exception exception) {
+            returnValue = exception.getLocalizedMessage();
+        }
+
+        return "Http POST: " + returnValue;
     }
 
     @GetMapping
