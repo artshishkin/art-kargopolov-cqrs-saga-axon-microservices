@@ -1,6 +1,9 @@
 package net.shyshkin.study.cqrs.estore.productservice.command;
 
+import net.shyshkin.study.cqrs.estore.productservice.core.events.ProductCreatedEvent;
+import net.shyshkin.study.cqrs.estore.productservice.mapper.ProductMapper;
 import org.axonframework.commandhandling.CommandHandler;
+import org.axonframework.modelling.command.AggregateLifecycle;
 import org.axonframework.spring.stereotype.Aggregate;
 
 import java.math.BigDecimal;
@@ -21,6 +24,11 @@ public class ProductAggregate {
         if (createProductCommand.getTitle() == null || createProductCommand.getTitle().isEmpty()) {
             throw new IllegalArgumentException("Title can not be empty");
         }
+
+        ProductCreatedEvent productCreatedEvent = ProductMapper.INSTANCE.toCreatedEvent(createProductCommand);
+
+        AggregateLifecycle.apply(productCreatedEvent);
+
     }
 
 
