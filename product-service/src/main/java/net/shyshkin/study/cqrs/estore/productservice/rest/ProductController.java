@@ -12,8 +12,8 @@ public class ProductController {
     private final Environment environment;
 
     @PostMapping
-    public String createProduct() {
-        return "Http POST is triggered";
+    public String createProduct(@RequestBody CreateProductRestModel createProductRestModel) {
+        return "Http POST: " + createProductRestModel;
     }
 
     @GetMapping
