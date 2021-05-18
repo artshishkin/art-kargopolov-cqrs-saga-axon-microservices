@@ -1,7 +1,10 @@
 package net.shyshkin.study.cqrs.estore.productservice.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.javafaker.Faker;
 import lombok.extern.slf4j.Slf4j;
+import net.shyshkin.study.cqrs.estore.productservice.core.data.ProductEntity;
+import net.shyshkin.study.cqrs.estore.productservice.core.data.ProductRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -11,10 +14,15 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
+import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.awaitility.Awaitility.await;
 import static org.hamcrest.CoreMatchers.startsWith;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -35,6 +43,9 @@ class ProductControllerManualTest {
     @Autowired
     ObjectMapper objectMapper;
 
+    @Autowired
+    ProductRepository repository;
+
     @BeforeEach
     void setUp() {
         mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
@@ -45,21 +56,36 @@ class ProductControllerManualTest {
 
         //given
         CreateProductRestModel createProductRestModel = CreateProductRestModel.builder()
-                .title("iPhone 3")
-                .price(new BigDecimal("125.0"))
+                .title(Faker.instance().commerce().productName())
+                .price(new BigDecimal("125.00"))
                 .quantity(2)
                 .build();
         String jsonPayload = objectMapper.writeValueAsString(createProductRestModel);
 
         //when
-        mockMvc.perform(post("/products")
+        MvcResult mvcResult = mockMvc.perform(post("/products")
                 .contentType(APPLICATION_JSON)
                 .content(jsonPayload))
 
                 //then
                 .andExpect(status().isOk())
                 .andExpect(content().string(startsWith("Http POST: ")))
-        ;
+                .andReturn();
+
+        String productId = mvcResult.getResponse()
+                .getContentAsString()
+                .replace("Http POST: ", "");
+
+        await()
+                .timeout(1L, SECONDS)
+                .untilAsserted(() -> {
+                    Optional<ProductEntity> productOptional = repository.findByProductId(productId);
+                    assertThat(productOptional)
+                            .hasValueSatisfying(productEntity -> assertThat(productEntity)
+                                    .hasNoNullFieldsOrProperties()
+                                    .isEqualToIgnoringGivenFields(createProductRestModel, "productId")
+                                    .hasFieldOrPropertyWithValue("productId", productId));
+                });
     }
 
     @ParameterizedTest

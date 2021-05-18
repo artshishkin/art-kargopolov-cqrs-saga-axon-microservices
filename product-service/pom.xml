@@ -17,6 +17,7 @@
         <java.version>11</java.version>
         <spring-cloud.version>2020.0.2</spring-cloud.version>
         <mapstruct.version>1.4.2.Final</mapstruct.version>
+        <awaitility.version>4.0.2</awaitility.version>
     </properties>
     <dependencies>
         <dependency>
@@ -69,6 +70,20 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>com.github.javafaker</groupId>
+            <artifactId>javafaker</artifactId>
+            <version>1.0.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.awaitility</groupId>
+            <artifactId>awaitility</artifactId>
+            <version>${awaitility.version}</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <dependencyManagement>
