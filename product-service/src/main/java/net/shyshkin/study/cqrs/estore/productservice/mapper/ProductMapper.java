@@ -1,9 +1,9 @@
 package net.shyshkin.study.cqrs.estore.productservice.mapper;
 
 import net.shyshkin.study.cqrs.estore.productservice.command.CreateProductCommand;
+import net.shyshkin.study.cqrs.estore.productservice.command.rest.CreateProductRestModel;
 import net.shyshkin.study.cqrs.estore.productservice.core.data.ProductEntity;
 import net.shyshkin.study.cqrs.estore.productservice.core.events.ProductCreatedEvent;
-import net.shyshkin.study.cqrs.estore.productservice.rest.CreateProductRestModel;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;

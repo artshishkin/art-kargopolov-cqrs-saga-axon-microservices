@@ -1,4 +1,4 @@
-package net.shyshkin.study.cqrs.estore.productservice.rest;
+package net.shyshkin.study.cqrs.estore.productservice.command.rest;
 
 import lombok.RequiredArgsConstructor;
 import net.shyshkin.study.cqrs.estore.productservice.command.CreateProductCommand;
@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/products")
 @RequiredArgsConstructor
-public class ProductController {
+public class ProductsCommandController {
 
     private final Environment environment;
     private final ProductMapper mapper;

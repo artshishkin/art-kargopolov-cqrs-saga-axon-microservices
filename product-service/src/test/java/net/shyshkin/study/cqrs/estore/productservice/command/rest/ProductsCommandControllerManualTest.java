@@ -1,4 +1,4 @@
-package net.shyshkin.study.cqrs.estore.productservice.rest;
+package net.shyshkin.study.cqrs.estore.productservice.command.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javafaker.Faker;
@@ -33,12 +33,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @DisplayName("Start axon-server docker-compose file first")
 @Disabled("Only for manual testing")
-class ProductControllerManualTest {
+class ProductsCommandControllerManualTest {
 
     MockMvc mockMvc;
 
     @Autowired
-    ProductController controller;
+    ProductsCommandController controller;
 
     @Autowired
     ObjectMapper objectMapper;

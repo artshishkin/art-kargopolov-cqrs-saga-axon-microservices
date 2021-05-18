@@ -1,4 +1,4 @@
-package net.shyshkin.study.cqrs.estore.productservice.rest;
+package net.shyshkin.study.cqrs.estore.productservice.command.rest;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
