@@ -4,6 +4,7 @@ import net.shyshkin.study.cqrs.estore.productservice.command.CreateProductComman
 import net.shyshkin.study.cqrs.estore.productservice.command.rest.CreateProductRestModel;
 import net.shyshkin.study.cqrs.estore.productservice.core.data.ProductEntity;
 import net.shyshkin.study.cqrs.estore.productservice.core.events.ProductCreatedEvent;
+import net.shyshkin.study.cqrs.estore.productservice.query.rest.ProductRestModel;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
@@ -21,5 +22,7 @@ public interface ProductMapper {
     ProductCreatedEvent toCreatedEvent(CreateProductCommand createProductCommand);
 
     ProductEntity toProductEntity(ProductCreatedEvent event);
+
+    ProductRestModel toProductRestModel(ProductEntity entity);
 
 }
