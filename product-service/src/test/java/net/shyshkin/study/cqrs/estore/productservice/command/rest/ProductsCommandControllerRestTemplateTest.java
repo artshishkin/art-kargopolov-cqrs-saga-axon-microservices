@@ -5,23 +5,18 @@ import com.github.javafaker.Faker;
 import lombok.extern.slf4j.Slf4j;
 import net.shyshkin.study.cqrs.estore.productservice.core.data.ProductEntity;
 import net.shyshkin.study.cqrs.estore.productservice.core.data.ProductRepository;
+import net.shyshkin.study.cqrs.estore.productservice.testcontainers.AxonServerContainer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.util.TestPropertyValues;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.context.ApplicationContextInitializer;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.ContextConfiguration;
-import org.testcontainers.containers.GenericContainer;
-import org.testcontainers.containers.wait.strategy.Wait;
+import org.springframework.test.context.TestPropertySource;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.utility.DockerImageName;
 
 import java.math.BigDecimal;
 import java.util.Optional;
@@ -32,7 +27,14 @@ import static org.awaitility.Awaitility.await;
 
 @Slf4j
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ContextConfiguration(initializers = {ProductsCommandControllerRestTemplateTest.Initializer.class})
+@TestPropertySource(properties = {
+        "eureka.client.register-with-eureka=false",
+        "eureka.client.fetch-registry=false",
+        "spring.datasource.url=jdbc:h2:mem:testdb",
+        "spring.datasource.username=sa",
+        "spring.datasource.password=",
+        "axon.axonserver.servers=${AXON_SERVERS}"
+})
 @Testcontainers
 class ProductsCommandControllerRestTemplateTest {
 
@@ -40,11 +42,7 @@ class ProductsCommandControllerRestTemplateTest {
     TestRestTemplate restTemplate;
 
     @Container
-    public static GenericContainer axonServer = new GenericContainer(DockerImageName.parse("axoniq/axonserver"))
-            .withExposedPorts(8024, 8124)
-            .waitingFor(
-                    Wait.forLogMessage(".*Started AxonServer in.*\\n", 1)
-            );
+    public static AxonServerContainer axonServer = AxonServerContainer.getInstance();
 
     @Autowired
     ProductsCommandController controller;
@@ -129,22 +127,4 @@ class ProductsCommandControllerRestTemplateTest {
 
     }
 
-    static class Initializer
-            implements ApplicationContextInitializer<ConfigurableApplicationContext> {
-        public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
-            String host = axonServer.getHost();
-            Integer port = axonServer.getMappedPort(8124);
-            log.debug("axonServer {}:{}", host, port);
-
-            String servers = host + ":" + port;
-            TestPropertyValues.of(
-                    "axon.axonserver.servers=" + servers,
-                    "eureka.client.register-with-eureka=false",
-                    "eureka.client.fetch-registry=false",
-                    "spring.datasource.url=jdbc:h2:mem:testdb",
-                    "spring.datasource.username=sa",
-                    "spring.datasource.password="
-            ).applyTo(configurableApplicationContext.getEnvironment());
-        }
-    }
 }
