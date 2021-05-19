@@ -30,14 +30,6 @@ public class ProductsCommandController {
         return "Http POST: " + returnValue;
     }
 
-    @GetMapping
-    public String getProduct() {
-        Integer serverPort = environment.getProperty("local.server.port", Integer.class);
-        String appName = environment.getProperty("spring.application.name");
-
-        return "Http GET on " + appName + ":" + serverPort;
-    }
-
     @PutMapping
     public String updateProduct() {
         return "Http PUT is handled";
