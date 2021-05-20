@@ -1,18 +1,25 @@
 package net.shyshkin.study.cqrs.estore.productservice.command.interceptors;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.shyshkin.study.cqrs.estore.productservice.command.CreateProductCommand;
+import net.shyshkin.study.cqrs.estore.productservice.core.data.ProductLookupEntity;
+import net.shyshkin.study.cqrs.estore.productservice.core.data.ProductLookupRepository;
 import org.axonframework.commandhandling.CommandMessage;
 import org.axonframework.messaging.MessageDispatchInterceptor;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.BiFunction;
 
 @Component
 @Slf4j
+@RequiredArgsConstructor
 public class CreateProductCommandInterceptor implements MessageDispatchInterceptor<CommandMessage<?>> {
+
+    static final String PRODUCT_EXISTS_PATTERN = "Product with title `%s` or product ID `%s` already exists";
+    private final ProductLookupRepository lookupRepository;
 
     @Override
     public BiFunction<Integer, CommandMessage<?>, CommandMessage<?>> handle(List<? extends CommandMessage<?>> messages) {
@@ -24,12 +31,15 @@ public class CreateProductCommandInterceptor implements MessageDispatchIntercept
 
                 CreateProductCommand createProductCommand = (CreateProductCommand) command.getPayload();
 
-                if (createProductCommand.getPrice().compareTo(BigDecimal.ZERO) <= 0) {
-                    throw new IllegalArgumentException("Price can not be less or equal to zero");
-                }
+                Optional<ProductLookupEntity> productLookupEntity = lookupRepository.findByProductIdOrTitle(createProductCommand.getProductId(), createProductCommand.getTitle());
 
-                if (createProductCommand.getTitle() == null || createProductCommand.getTitle().isEmpty()) {
-                    throw new IllegalArgumentException("Title can not be empty");
+                if (productLookupEntity.isPresent()) {
+                    throw new IllegalArgumentException(
+                            String.format(PRODUCT_EXISTS_PATTERN,
+                                    createProductCommand.getTitle(),
+                                    createProductCommand.getProductId()
+                            )
+                    );
                 }
 
                 if (createProductCommand.getTitle().contains("`")) {
