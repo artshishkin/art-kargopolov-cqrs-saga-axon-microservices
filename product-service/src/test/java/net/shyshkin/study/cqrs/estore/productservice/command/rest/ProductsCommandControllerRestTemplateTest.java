@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javafaker.Faker;
 import lombok.extern.slf4j.Slf4j;
 import net.shyshkin.study.cqrs.estore.productservice.core.data.ProductEntity;
+import net.shyshkin.study.cqrs.estore.productservice.core.data.ProductLookupRepository;
 import net.shyshkin.study.cqrs.estore.productservice.core.data.ProductRepository;
 import net.shyshkin.study.cqrs.estore.productservice.testcontainers.AxonServerContainer;
 import org.junit.jupiter.api.Test;
@@ -45,20 +46,21 @@ class ProductsCommandControllerRestTemplateTest {
     public static AxonServerContainer axonServer = AxonServerContainer.getInstance();
 
     @Autowired
-    ProductsCommandController controller;
-
-    @Autowired
     ObjectMapper objectMapper;
 
     @Autowired
     ProductRepository repository;
 
+    @Autowired
+    ProductLookupRepository lookupRepository;
+
     @Test
     void createProduct_correct() {
 
         //given
+        String title = Faker.instance().commerce().productName();
         CreateProductRestModel createProductRestModel = CreateProductRestModel.builder()
-                .title(Faker.instance().commerce().productName())
+                .title(title)
                 .price(new BigDecimal("125.00"))
                 .quantity(2)
                 .build();
@@ -90,6 +92,13 @@ class ProductsCommandControllerRestTemplateTest {
                                     .satisfies(entity -> log.debug("Entity: {}", entity))
                             );
                 });
+
+        assertThat(lookupRepository.findByProductIdOrTitle(productId, title))
+                .hasValueSatisfying(lookupEntity -> assertThat(lookupEntity)
+                        .hasNoNullFieldsOrProperties()
+                        .hasFieldOrPropertyWithValue("productId", productId)
+                        .hasFieldOrPropertyWithValue("title", title)
+                );
     }
 
     @ParameterizedTest
