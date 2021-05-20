@@ -22,13 +22,7 @@ public class ProductsCommandController {
     public String createProduct(@Valid @RequestBody CreateProductRestModel createProductRestModel) {
         CreateProductCommand createProductCommand = mapper.toCreateCommand(createProductRestModel);
 
-        String returnValue;
-        try {
-            returnValue = commandGateway.sendAndWait(createProductCommand);
-        } catch (Exception exception) {
-            returnValue = exception.getLocalizedMessage();
-        }
-
+        String returnValue = commandGateway.sendAndWait(createProductCommand);
         return "Http POST: " + returnValue;
     }
 
