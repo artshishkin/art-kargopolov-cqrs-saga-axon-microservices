@@ -67,7 +67,7 @@ class CreateProductCommandInterceptorTest {
         //then
         String body = responseEntity.getBody();
         log.debug("Response body: {}", body);
-        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         assertThat(body).contains(errorMessage);
     }
 
@@ -95,8 +95,7 @@ class CreateProductCommandInterceptorTest {
         //then
         String body = responseEntity.getBody();
         log.debug("Response body: {}", body);
-        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(body).startsWith("Http POST: ");
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         assertThat(body).contains(errorMessage);
 
     }
@@ -116,7 +115,6 @@ class CreateProductCommandInterceptorTest {
         //given
         String title = Faker.instance().commerce().productName();
         String price = "666.00";
-        String errorMessage = "Already exists";
 
         CreateProductRestModel createProductRestModel = CreateProductRestModel.builder()
                 .title(title)
