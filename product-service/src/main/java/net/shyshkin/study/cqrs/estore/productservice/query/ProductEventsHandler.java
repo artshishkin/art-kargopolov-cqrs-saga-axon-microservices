@@ -35,7 +35,7 @@ public class ProductEventsHandler {
     }
 
     @EventHandler
-    public void on(ProductCreatedEvent event) {
+    public void on(ProductCreatedEvent event) throws Exception {
 
         ProductEntity productEntity = mapper.toProductEntity(event);
         repository.save(productEntity);
@@ -43,13 +43,16 @@ public class ProductEventsHandler {
         //One way to handle exception
         try {
             if (productEntity.getTitle().contains("throwInEventHandler IllegalArgumentException (try-catch)"))
-                throw new IllegalArgumentException("Some fake code that throws exception");
+                throw new IllegalArgumentException("Some fake code that throws IllegalArgumentException");
         } catch (IllegalArgumentException ex) {
             log.error("Exception in EventHandler (try-catch block): {}:{}", ex.getClass().getName(), ex.getMessage());
         }
 
         if (productEntity.getTitle().contains("throwInEventHandler IllegalArgumentException (ExceptionHandler)"))
-            throw new IllegalArgumentException("Some fake code that throws exception");
+            throw new IllegalArgumentException("Some fake code that throws IllegalArgumentException");
+
+        if (productEntity.getTitle().contains("throwInEventHandler Exception (ExceptionHandler)"))
+            throw new Exception("Some fake code that throws Common Exception");
     }
 
 }
