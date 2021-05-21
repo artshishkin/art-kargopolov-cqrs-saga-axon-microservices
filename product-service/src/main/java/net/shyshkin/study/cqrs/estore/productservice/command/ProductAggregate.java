@@ -38,6 +38,8 @@ public class ProductAggregate {
 
         AggregateLifecycle.apply(productCreatedEvent);
 
+        if (productCreatedEvent.getTitle().contains("throw IllegalStateException"))
+            throw new IllegalStateException("An error took place in CreateProductCommand @CommandHandler method");
     }
 
     @EventSourcingHandler
