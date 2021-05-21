@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.shyshkin.study.cqrs.estore.productservice.command.rest.CreateProductRestModel;
 import net.shyshkin.study.cqrs.estore.productservice.core.data.ProductLookupEntity;
 import net.shyshkin.study.cqrs.estore.productservice.core.data.ProductLookupRepository;
+import net.shyshkin.study.cqrs.estore.productservice.core.errorhandling.ErrorMessage;
 import net.shyshkin.study.cqrs.estore.productservice.testcontainers.AxonServerContainer;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -59,16 +61,19 @@ class CreateProductCommandInterceptorTest {
                 .build();
 
         //when
-        ResponseEntity<String> responseEntity = restTemplate
+        ResponseEntity<ErrorMessage> responseEntity = restTemplate
                 .postForEntity("/products",
                         createProductRestModel,
-                        String.class);
+                        ErrorMessage.class);
 
         //then
-        String body = responseEntity.getBody();
+        ErrorMessage body = responseEntity.getBody();
         log.debug("Response body: {}", body);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-        assertThat(body).contains(errorMessage);
+        assertThat(body)
+                .hasNoNullFieldsOrProperties()
+                .satisfies(errorMess -> assertThat(errorMess.getTimestamp()).isEqualToIgnoringNanos(LocalDateTime.now()))
+                .satisfies(errorMess -> assertThat(errorMess.getMessage()).contains(errorMessage));
     }
 
     @Test
@@ -87,17 +92,19 @@ class CreateProductCommandInterceptorTest {
                 .build();
 
         //when
-        ResponseEntity<String> responseEntity = restTemplate
+        ResponseEntity<ErrorMessage> responseEntity = restTemplate
                 .postForEntity("/products",
                         createProductRestModel,
-                        String.class);
+                        ErrorMessage.class);
 
         //then
-        String body = responseEntity.getBody();
+        ErrorMessage body = responseEntity.getBody();
         log.debug("Response body: {}", body);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-        assertThat(body).contains(errorMessage);
-
+        assertThat(body)
+                .hasNoNullFieldsOrProperties()
+                .satisfies(errorMess -> assertThat(errorMess.getTimestamp()).isEqualToIgnoringNanos(LocalDateTime.now()))
+                .satisfies(errorMess -> assertThat(errorMess.getMessage()).contains(errorMessage));
     }
 
     private String getTitleOfExistingProduct() {
