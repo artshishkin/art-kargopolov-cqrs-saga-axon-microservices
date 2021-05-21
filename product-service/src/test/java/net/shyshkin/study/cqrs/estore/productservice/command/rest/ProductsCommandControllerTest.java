@@ -3,23 +3,19 @@ package net.shyshkin.study.cqrs.estore.productservice.command.rest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javafaker.Faker;
 import lombok.extern.slf4j.Slf4j;
+import net.shyshkin.study.cqrs.estore.productservice.commontest.AbstractAxonServerTest;
 import net.shyshkin.study.cqrs.estore.productservice.core.data.ProductEntity;
 import net.shyshkin.study.cqrs.estore.productservice.core.data.ProductRepository;
-import net.shyshkin.study.cqrs.estore.productservice.testcontainers.AxonServerContainer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.context.WebApplicationContext;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.math.BigDecimal;
 import java.util.Optional;
@@ -34,22 +30,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Slf4j
-@SpringBootTest
-@TestPropertySource(properties = {
-        "eureka.client.register-with-eureka=false",
-        "eureka.client.fetch-registry=false",
-        "spring.datasource.url=jdbc:h2:mem:testdb",
-        "spring.datasource.username=sa",
-        "spring.datasource.password=",
-        "axon.axonserver.servers=${AXON_SERVERS}"
-})
-@Testcontainers
-class ProductsCommandControllerTest {
+class ProductsCommandControllerTest  extends AbstractAxonServerTest {
 
     MockMvc mockMvc;
-
-    @Container
-    public static AxonServerContainer axonServer = AxonServerContainer.getInstance();
 
     @Autowired
     ProductsCommandController controller;

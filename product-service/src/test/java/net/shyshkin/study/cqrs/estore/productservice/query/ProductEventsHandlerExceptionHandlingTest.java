@@ -2,17 +2,12 @@ package net.shyshkin.study.cqrs.estore.productservice.query;
 
 import lombok.extern.slf4j.Slf4j;
 import net.shyshkin.study.cqrs.estore.productservice.command.CreateProductCommand;
-import net.shyshkin.study.cqrs.estore.productservice.testcontainers.AxonServerContainer;
+import net.shyshkin.study.cqrs.estore.productservice.commontest.AbstractAxonServerTest;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.test.context.TestPropertySource;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -22,26 +17,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 
 @Slf4j
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@TestPropertySource(properties = {
-        "eureka.client.register-with-eureka=false",
-        "eureka.client.fetch-registry=false",
-        "spring.datasource.url=jdbc:h2:mem:testdb",
-        "spring.datasource.username=sa",
-        "spring.datasource.password=",
-        "axon.axonserver.servers=${AXON_SERVERS}"
-})
-@Testcontainers
-class ProductEventsHandlerExceptionHandlingTest {
-
-    @Autowired
-    TestRestTemplate restTemplate;
+class ProductEventsHandlerExceptionHandlingTest  extends AbstractAxonServerTest {
 
     @Autowired
     CommandGateway commandGateway;
-
-    @Container
-    public static AxonServerContainer axonServer = AxonServerContainer.getInstance();
 
     @ParameterizedTest(name="[{index}] {0}")
     @DisplayName("Handling exception in @EventHandler method")

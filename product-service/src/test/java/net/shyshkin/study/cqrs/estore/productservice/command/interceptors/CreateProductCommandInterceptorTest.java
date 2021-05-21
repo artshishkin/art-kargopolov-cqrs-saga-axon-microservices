@@ -3,20 +3,13 @@ package net.shyshkin.study.cqrs.estore.productservice.command.interceptors;
 import com.github.javafaker.Faker;
 import lombok.extern.slf4j.Slf4j;
 import net.shyshkin.study.cqrs.estore.productservice.command.rest.CreateProductRestModel;
+import net.shyshkin.study.cqrs.estore.productservice.commontest.AbstractAxonServerTest;
 import net.shyshkin.study.cqrs.estore.productservice.core.data.ProductLookupEntity;
-import net.shyshkin.study.cqrs.estore.productservice.core.data.ProductLookupRepository;
 import net.shyshkin.study.cqrs.estore.productservice.core.errorhandling.ErrorMessage;
-import net.shyshkin.study.cqrs.estore.productservice.testcontainers.AxonServerContainer;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.TestPropertySource;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -25,26 +18,7 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@TestPropertySource(properties = {
-        "eureka.client.register-with-eureka=false",
-        "eureka.client.fetch-registry=false",
-        "spring.datasource.url=jdbc:h2:mem:testdb",
-        "spring.datasource.username=sa",
-        "spring.datasource.password=",
-        "axon.axonserver.servers=${AXON_SERVERS}"
-})
-@Testcontainers
-class CreateProductCommandInterceptorTest {
-
-    @Autowired
-    TestRestTemplate restTemplate;
-
-    @Autowired
-    ProductLookupRepository lookupRepository;
-
-    @Container
-    public static AxonServerContainer axonServer = AxonServerContainer.getInstance();
+class CreateProductCommandInterceptorTest extends AbstractAxonServerTest {
 
     @Test
     void createProduct_validationFailedInInterceptor() throws Exception {
