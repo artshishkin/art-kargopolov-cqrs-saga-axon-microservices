@@ -1,5 +1,6 @@
 package net.shyshkin.study.cqrs.estore.orderservice.commontest;
 
+import net.shyshkin.study.cqrs.estore.orderservice.core.data.OrdersRepository;
 import net.shyshkin.study.cqrs.estore.orderservice.testcontainers.AxonServerContainer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,5 +26,8 @@ public abstract class AbstractAxonServerTest {
 
     @Container
     public static AxonServerContainer axonServer = AxonServerContainer.getInstance();
+
+    @Autowired
+    protected OrdersRepository ordersRepository;
 
 }

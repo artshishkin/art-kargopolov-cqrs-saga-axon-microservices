@@ -2,6 +2,7 @@ package net.shyshkin.study.cqrs.estore.orderservice.core.mapper;
 
 import net.shyshkin.study.cqrs.estore.orderservice.command.CreateOrderCommand;
 import net.shyshkin.study.cqrs.estore.orderservice.command.rest.CreateOrderRestModel;
+import net.shyshkin.study.cqrs.estore.orderservice.core.data.OrderEntity;
 import net.shyshkin.study.cqrs.estore.orderservice.core.events.OrderCreatedEvent;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
@@ -14,5 +15,7 @@ public interface OrderMapper {
     CreateOrderCommand toCommand(CreateOrderRestModel restModel);
 
     OrderCreatedEvent toOrderCreatedEvent(CreateOrderCommand createOrderCommand);
+
+    OrderEntity toEntity(OrderCreatedEvent event);
 
 }
