@@ -2,6 +2,7 @@ package net.shyshkin.study.cqrs.estore.productservice.query;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.shyshkin.study.cqrs.estore.core.events.ProductReservedEvent;
 import net.shyshkin.study.cqrs.estore.productservice.core.data.ProductEntity;
 import net.shyshkin.study.cqrs.estore.productservice.core.data.ProductRepository;
 import net.shyshkin.study.cqrs.estore.productservice.core.events.ProductCreatedEvent;
@@ -10,6 +11,8 @@ import org.axonframework.config.ProcessingGroup;
 import org.axonframework.eventhandling.EventHandler;
 import org.axonframework.messaging.interceptors.ExceptionHandler;
 import org.springframework.stereotype.Component;
+
+import javax.persistence.EntityNotFoundException;
 
 @Slf4j
 @Component
@@ -53,6 +56,19 @@ public class ProductEventsHandler {
 
         if (productEntity.getTitle().contains("throwInEventHandler Exception (ExceptionHandler)"))
             throw new Exception("Some fake code that throws Common Exception");
+    }
+
+    @EventHandler
+    public void on(ProductReservedEvent event) {
+
+        String productId = event.getProductId().toString();
+        ProductEntity productEntity = repository
+                .findByProductId(productId)
+                .orElseThrow(() -> new EntityNotFoundException("Product with id `" + productId + "` not found"));
+
+        int updatedQuantity = productEntity.getQuantity() - event.getQuantity();
+        productEntity.setQuantity(updatedQuantity);
+        repository.save(productEntity);
     }
 
 }
