@@ -2,6 +2,7 @@ package net.shyshkin.study.cqrs.estore.orderservice.saga;
 
 import lombok.extern.slf4j.Slf4j;
 import net.shyshkin.study.cqrs.estore.core.commands.ReserveProductCommand;
+import net.shyshkin.study.cqrs.estore.core.events.ProductReservedEvent;
 import net.shyshkin.study.cqrs.estore.orderservice.core.events.OrderCreatedEvent;
 import org.axonframework.commandhandling.CommandCallback;
 import org.axonframework.commandhandling.CommandMessage;
@@ -41,5 +42,13 @@ public class OrderSaga {
                 }
             }
         });
+    }
+
+    @SagaEventHandler(associationProperty = "orderId")
+    public void handle(ProductReservedEvent productReservedEvent) {
+
+        log.debug("ProductReservedEvent: {}", productReservedEvent);
+
+        // Process user's payment
     }
 }
