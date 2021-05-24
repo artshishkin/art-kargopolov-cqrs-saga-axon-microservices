@@ -13,7 +13,7 @@ services:
       - C:\Users\Admin\IdeaProjects\Study\SergeyKargopolov\CQRS_SAGA_Axon_Microservices\art-kargopolov-cqrs-saga-axon-microservices\docker-compose\product-service\config:/config
 
   product-service:
-    image: artarkatesoft/product-service
+    image: artarkatesoft/cqrs-product-service
     ports:
     - 8090:8080
     environment:

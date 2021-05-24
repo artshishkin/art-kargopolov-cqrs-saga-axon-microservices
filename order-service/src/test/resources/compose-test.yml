@@ -9,7 +9,7 @@ services:
       - 8124:8124
 
   product-service:
-    image: artarkatesoft/product-service
+    image: artarkatesoft/cqrs-product-service
     ports:
     - 8090:8080
     environment:
