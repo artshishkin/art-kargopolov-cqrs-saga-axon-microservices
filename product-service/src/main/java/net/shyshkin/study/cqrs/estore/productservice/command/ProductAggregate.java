@@ -1,5 +1,6 @@
 package net.shyshkin.study.cqrs.estore.productservice.command;
 
+import net.shyshkin.study.cqrs.estore.core.commands.ReserveProductCommand;
 import net.shyshkin.study.cqrs.estore.productservice.core.events.ProductCreatedEvent;
 import net.shyshkin.study.cqrs.estore.productservice.mapper.ProductMapper;
 import org.axonframework.commandhandling.CommandHandler;
@@ -40,6 +41,13 @@ public class ProductAggregate {
 
         if (productCreatedEvent.getTitle().contains("throw IllegalStateException"))
             throw new IllegalStateException("An error took place in CreateProductCommand @CommandHandler method");
+    }
+
+    @CommandHandler
+    public void handle(ReserveProductCommand reserveProductCommand) {
+        if (quantity < reserveProductCommand.getQuantity()) {
+            throw new IllegalArgumentException("Insufficient number of items in stock");
+        }
     }
 
     @EventSourcingHandler
