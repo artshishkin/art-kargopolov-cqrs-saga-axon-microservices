@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+  #  docker run -d --name axonserver -p 8024:8024 -p 8124:8124 axoniq/axonserver
+  axon-server:
+    image: axoniq/axonserver
+    ports:
+      - 8024:8024
+      - 8124:8124
+
+  product-service:
+    image: artarkatesoft/product-service
+    ports:
+    - 8090:8080
+    environment:
+      "eureka.client.enabled": "false"
+      "spring.datasource.url": 'jdbc:h2:mem:testdb'
+      "spring.datasource.username": 'sa'
+      "spring.datasource.password": ''
+      "axon.axonserver.servers": "axon-server:8124"
+
+
