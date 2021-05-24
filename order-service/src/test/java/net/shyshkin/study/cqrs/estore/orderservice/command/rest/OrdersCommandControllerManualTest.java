@@ -33,8 +33,9 @@ class OrdersCommandControllerManualTest {
     @Test
     void createOrder_correct() {
         //given
+        String productId = "e4b64e40-9d8b-4bdd-8696-7eaa57dc2eaa";
         CreateOrderRestModel createOrderRestModel = CreateOrderRestModel.builder()
-                .productId(UUID.fromString("f241af45-4854-43f4-95bc-ab54da338a29"))
+                .productId(UUID.fromString(productId))
                 .addressId(UUID.fromString("afbb5881-a872-4d13-993c-faeb8350eea5"))
                 .quantity(1)
                 .build();
@@ -70,5 +71,9 @@ class OrdersCommandControllerManualTest {
                                                 .hasFieldOrPropertyWithValue("orderStatus", OrderStatus.CREATED)
                                 )
                 );
+
+        await()
+                .timeout(100, TimeUnit.MILLISECONDS);
+        log.debug("View in logs (current or another instance of `order-service`): `OrderCreatedEvent is handled` followed by `ProductReservedEvent is handled`");
     }
 }

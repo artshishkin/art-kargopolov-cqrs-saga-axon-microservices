@@ -31,6 +31,9 @@ public class OrderSaga {
                 .userId(orderCreatedEvent.getUserId())
                 .build();
 
+        log.debug("OrderCreatedEvent is handled for orderId: {} and productId: {}",
+                orderCreatedEvent.getOrderId(), orderCreatedEvent.getProductId());
+
         commandGateway.send(reserveProductCommand, new CommandCallback<ReserveProductCommand, Object>() {
             @Override
             public void onResult(CommandMessage<? extends ReserveProductCommand> commandMessage, CommandResultMessage<?> commandResultMessage) {
@@ -47,7 +50,7 @@ public class OrderSaga {
     @SagaEventHandler(associationProperty = "orderId")
     public void handle(ProductReservedEvent productReservedEvent) {
 
-        log.debug("ProductReservedEvent: {}", productReservedEvent);
+        log.debug("ProductReservedEvent is handled: {}", productReservedEvent);
 
         // Process user's payment
     }

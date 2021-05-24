@@ -69,6 +69,9 @@ public class ProductEventsHandler {
         int updatedQuantity = productEntity.getQuantity() - event.getQuantity();
         productEntity.setQuantity(updatedQuantity);
         repository.save(productEntity);
+
+        log.debug("ProductReservedEvent is called: {}", event);
+
     }
 
 }
