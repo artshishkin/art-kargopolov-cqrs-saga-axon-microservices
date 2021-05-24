@@ -11,8 +11,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource(properties = {
-        "eureka.client.register-with-eureka=false",
-        "eureka.client.fetch-registry=false",
+        "eureka.client.enabled=false",
         "spring.datasource.url=jdbc:h2:mem:testdb",
         "spring.datasource.username=sa",
         "spring.datasource.password=",
