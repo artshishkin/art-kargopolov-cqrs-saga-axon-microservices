@@ -59,7 +59,7 @@ class OrdersCommandControllerIT {
     }
 
     @Test
-    void createOrder_correct() {
+    void createOrder_correct() throws InterruptedException {
         //given
         UUID productId = createProduct();
         CreateOrderRestModel createOrderRestModel = CreateOrderRestModel.builder()
@@ -100,12 +100,12 @@ class OrdersCommandControllerIT {
                                 )
                 );
 
-        await()
-                .timeout(100, TimeUnit.MILLISECONDS);
+        Thread.sleep(1000);
 
         log.debug("View in logs (current or another instance of `order-service`): `OrderCreatedEvent is handled`" +
                 " followed by `ProductReservedEvent is handled` " +
-                " followed by `Successfully fetched payment details` "
+                " followed by `Successfully fetched payment details` " +
+                " followed by `PaymentProcessedEvent is handled` "
         );
     }
 

@@ -26,7 +26,8 @@ public class TestComposeContainer extends DockerComposeContainer<TestComposeCont
                             Wait.forLogMessage(".*Started AxonServer in.*\\n", 1))
                     .withExposedService("product-service_1", 8080,
                             Wait.forHealthcheck()
-                    );
+                    )
+                    .waitingFor("payment-service_1", Wait.forHealthcheck());
 
         }
         return container;

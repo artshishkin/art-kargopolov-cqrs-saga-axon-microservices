@@ -24,4 +24,14 @@ services:
     environment:
       "axon.axonserver.servers": "axon-server:8124"
 
+  payment-service:
+    image: artarkatesoft/cqrs-payment-service
+    ports:
+      - 8091:8080
+    environment:
+      "spring.datasource.url": 'jdbc:h2:mem:testdb'
+      "spring.datasource.username": 'sa'
+      "spring.datasource.password": ''
+      "axon.axonserver.servers": "axon-server:8124"
+
 

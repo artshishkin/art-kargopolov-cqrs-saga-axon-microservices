@@ -108,6 +108,7 @@ public class OrderSaga {
             // TODO: 25.05.2021 Start compensating transaction
             log.debug("Result of Process Payment Command is NULL. Starting compensating transaction");
         }
+        log.debug("Process Payment Command result: {}", result);
     }
 
     @SagaEventHandler(associationProperty = "orderId")
