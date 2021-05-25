@@ -7,6 +7,6 @@ import java.util.UUID;
 @Data
 public class FetchUserPaymentDetailsQuery {
 
-    private UUID userId;
+    private final UUID userId;
 
 }
