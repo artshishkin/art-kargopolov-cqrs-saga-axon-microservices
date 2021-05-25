@@ -33,7 +33,7 @@ class OrdersCommandControllerManualTest {
     @Test
     void createOrder_correct() {
         //given
-        String productId = "e4b64e40-9d8b-4bdd-8696-7eaa57dc2eaa";
+        String productId = "753f6a14-df36-4743-ba67-ad879b8c6172";
         CreateOrderRestModel createOrderRestModel = CreateOrderRestModel.builder()
                 .productId(UUID.fromString(productId))
                 .addressId(UUID.fromString("afbb5881-a872-4d13-993c-faeb8350eea5"))
@@ -74,6 +74,9 @@ class OrdersCommandControllerManualTest {
 
         await()
                 .timeout(100, TimeUnit.MILLISECONDS);
-        log.debug("View in logs (current or another instance of `order-service`): `OrderCreatedEvent is handled` followed by `ProductReservedEvent is handled`");
+        log.debug("View in logs (current or another instance of `order-service`): `OrderCreatedEvent is handled`" +
+                " followed by `ProductReservedEvent is handled` " +
+                " followed by `Successfully fetched payment details` "
+        );
     }
 }
