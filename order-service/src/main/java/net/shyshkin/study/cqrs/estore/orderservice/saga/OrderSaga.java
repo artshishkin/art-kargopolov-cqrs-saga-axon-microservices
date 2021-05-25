@@ -3,6 +3,7 @@ package net.shyshkin.study.cqrs.estore.orderservice.saga;
 import lombok.extern.slf4j.Slf4j;
 import net.shyshkin.study.cqrs.estore.core.commands.ProcessPaymentCommand;
 import net.shyshkin.study.cqrs.estore.core.commands.ReserveProductCommand;
+import net.shyshkin.study.cqrs.estore.core.events.PaymentProcessedEvent;
 import net.shyshkin.study.cqrs.estore.core.events.ProductReservedEvent;
 import net.shyshkin.study.cqrs.estore.core.model.User;
 import net.shyshkin.study.cqrs.estore.core.query.FetchUserPaymentDetailsQuery;
@@ -108,4 +109,13 @@ public class OrderSaga {
             log.debug("Result of Process Payment Command is NULL. Starting compensating transaction");
         }
     }
+
+    @SagaEventHandler(associationProperty = "orderId")
+    public void handle(PaymentProcessedEvent paymentProcessedEvent) {
+
+        log.debug("PaymentProcessedEvent is handled: {}", paymentProcessedEvent);
+        // TODO: 25.05.2021 Send an ApproveOrderCommand
+
+    }
+
 }
