@@ -18,11 +18,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Slf4j
 public class OrderSaga {
 
-    @Autowired
     private transient CommandGateway commandGateway;
+    private transient OrderMapper mapper;
 
     @Autowired
-    private transient OrderMapper mapper;
+    public void setCommandGateway(CommandGateway commandGateway) {
+        this.commandGateway = commandGateway;
+    }
+
+    @Autowired
+    public void setMapper(OrderMapper mapper) {
+        this.mapper = mapper;
+    }
 
     @StartSaga
     @SagaEventHandler(associationProperty = "orderId")
