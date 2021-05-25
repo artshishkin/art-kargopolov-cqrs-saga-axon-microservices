@@ -19,4 +19,9 @@ services:
       "spring.datasource.password": ''
       "axon.axonserver.servers": "axon-server:8124"
 
+  user-service:
+    image: artarkatesoft/cqrs-user-service
+    environment:
+      "axon.axonserver.servers": "axon-server:8124"
+
 

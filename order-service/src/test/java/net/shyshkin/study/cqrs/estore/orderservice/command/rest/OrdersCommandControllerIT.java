@@ -102,7 +102,11 @@ class OrdersCommandControllerIT {
 
         await()
                 .timeout(100, TimeUnit.MILLISECONDS);
-        log.debug("View in logs (current or another instance of `order-service`): `OrderCreatedEvent is handled` followed by `ProductReservedEvent is handled`");
+
+        log.debug("View in logs (current or another instance of `order-service`): `OrderCreatedEvent is handled`" +
+                " followed by `ProductReservedEvent is handled` " +
+                " followed by `Successfully fetched payment details` "
+        );
     }
 
     private UUID createProduct() {
