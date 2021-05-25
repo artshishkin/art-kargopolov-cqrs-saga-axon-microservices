@@ -1,6 +1,7 @@
 package net.shyshkin.study.cqrs.estore.orderservice.saga;
 
 import lombok.extern.slf4j.Slf4j;
+import net.shyshkin.study.cqrs.estore.core.commands.ProcessPaymentCommand;
 import net.shyshkin.study.cqrs.estore.core.commands.ReserveProductCommand;
 import net.shyshkin.study.cqrs.estore.core.events.ProductReservedEvent;
 import net.shyshkin.study.cqrs.estore.core.model.User;
@@ -16,6 +17,9 @@ import org.axonframework.modelling.saga.StartSaga;
 import org.axonframework.queryhandling.QueryGateway;
 import org.axonframework.spring.stereotype.Saga;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 @Saga
 @Slf4j
@@ -82,5 +86,26 @@ public class OrderSaga {
             return;
         }
         log.debug("Successfully fetched payment details: {}", user);
+
+        ProcessPaymentCommand processPaymentCommand = ProcessPaymentCommand
+                .builder()
+                .paymentId(UUID.randomUUID())
+                .orderId(productReservedEvent.getOrderId())
+                .paymentDetails(user.getPaymentDetails())
+                .build();
+
+        Object result = null;
+        try {
+            result = commandGateway.sendAndWait(processPaymentCommand, 10, TimeUnit.SECONDS);
+        } catch (Exception ex) {
+            log.error("There was an Exception: {}:{}", ex.getClass().getName(), ex.getMessage());
+            // TODO: 25.05.2021 Start compensating transaction
+            return;
+        }
+
+        if (result == null) {
+            // TODO: 25.05.2021 Start compensating transaction
+            log.debug("Result of Process Payment Command is NULL. Starting compensating transaction");
+        }
     }
 }
