@@ -1,5 +1,6 @@
 package net.shyshkin.study.cqrs.estore.orderservice.core.mapper;
 
+import net.shyshkin.study.cqrs.estore.core.commands.ReserveProductCommand;
 import net.shyshkin.study.cqrs.estore.orderservice.command.CreateOrderCommand;
 import net.shyshkin.study.cqrs.estore.orderservice.command.rest.CreateOrderRestModel;
 import net.shyshkin.study.cqrs.estore.orderservice.core.data.OrderEntity;
@@ -17,5 +18,7 @@ public interface OrderMapper {
     OrderCreatedEvent toOrderCreatedEvent(CreateOrderCommand createOrderCommand);
 
     OrderEntity toEntity(OrderCreatedEvent event);
+
+    ReserveProductCommand toReserveProductCommand(OrderCreatedEvent event);
 
 }

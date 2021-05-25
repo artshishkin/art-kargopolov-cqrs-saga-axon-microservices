@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.shyshkin.study.cqrs.estore.core.commands.ReserveProductCommand;
 import net.shyshkin.study.cqrs.estore.core.events.ProductReservedEvent;
 import net.shyshkin.study.cqrs.estore.orderservice.core.events.OrderCreatedEvent;
+import net.shyshkin.study.cqrs.estore.orderservice.core.mapper.OrderMapper;
 import org.axonframework.commandhandling.CommandCallback;
 import org.axonframework.commandhandling.CommandMessage;
 import org.axonframework.commandhandling.CommandResultMessage;
@@ -20,16 +21,14 @@ public class OrderSaga {
     @Autowired
     private transient CommandGateway commandGateway;
 
+    @Autowired
+    private transient OrderMapper mapper;
+
     @StartSaga
     @SagaEventHandler(associationProperty = "orderId")
     public void handle(OrderCreatedEvent orderCreatedEvent) {
 
-        ReserveProductCommand reserveProductCommand = ReserveProductCommand.builder()
-                .productId(orderCreatedEvent.getProductId())
-                .orderId(orderCreatedEvent.getOrderId())
-                .quantity(orderCreatedEvent.getQuantity())
-                .userId(orderCreatedEvent.getUserId())
-                .build();
+        ReserveProductCommand reserveProductCommand = mapper.toReserveProductCommand(orderCreatedEvent);
 
         log.debug("OrderCreatedEvent is handled for orderId: {} and productId: {}",
                 orderCreatedEvent.getOrderId(), orderCreatedEvent.getProductId());
