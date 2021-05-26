@@ -4,6 +4,7 @@ import lombok.NoArgsConstructor;
 import net.shyshkin.study.cqrs.estore.orderservice.command.ApproveOrderCommand;
 import net.shyshkin.study.cqrs.estore.orderservice.command.CreateOrderCommand;
 import net.shyshkin.study.cqrs.estore.orderservice.core.OrderStatus;
+import net.shyshkin.study.cqrs.estore.orderservice.core.events.OrderApprovedEvent;
 import net.shyshkin.study.cqrs.estore.orderservice.core.events.OrderCreatedEvent;
 import net.shyshkin.study.cqrs.estore.orderservice.core.mapper.OrderMapper;
 import org.axonframework.commandhandling.CommandHandler;
@@ -47,9 +48,12 @@ public class OrderAggregate {
 
     @CommandHandler
     public void handle(ApproveOrderCommand approveOrderCommand) {
-
-        // TODO: 26.05.2021 Create and publish OrderApprovedEvent
-
+        OrderApprovedEvent orderApprovedEvent = new OrderApprovedEvent(approveOrderCommand.getOrderId());
+        AggregateLifecycle.apply(orderApprovedEvent);
     }
 
+    @EventSourcingHandler
+    protected void on(OrderApprovedEvent orderApprovedEvent) {
+        this.orderStatus = orderApprovedEvent.getOrderStatus();
+    }
 }
