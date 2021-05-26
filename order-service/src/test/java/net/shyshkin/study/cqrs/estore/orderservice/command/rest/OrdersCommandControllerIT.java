@@ -100,12 +100,13 @@ class OrdersCommandControllerIT {
                                 )
                 );
 
-        Thread.sleep(1000);
+        Thread.sleep(1500);
 
         log.debug("View in logs (current or another instance of `order-service`): `OrderCreatedEvent is handled`" +
                 " followed by `ProductReservedEvent is handled` " +
                 " followed by `Successfully fetched payment details` " +
-                " followed by `PaymentProcessedEvent is handled` "
+                " followed by `PaymentProcessedEvent is handled` " +
+                " followed by `OrderSaga if competed for order with Id` "
         );
     }
 
