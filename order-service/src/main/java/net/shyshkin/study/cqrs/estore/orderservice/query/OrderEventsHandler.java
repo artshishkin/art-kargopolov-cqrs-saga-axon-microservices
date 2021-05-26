@@ -6,6 +6,7 @@ import net.shyshkin.study.cqrs.estore.orderservice.core.data.OrderEntity;
 import net.shyshkin.study.cqrs.estore.orderservice.core.data.OrdersRepository;
 import net.shyshkin.study.cqrs.estore.orderservice.core.events.OrderApprovedEvent;
 import net.shyshkin.study.cqrs.estore.orderservice.core.events.OrderCreatedEvent;
+import net.shyshkin.study.cqrs.estore.orderservice.core.events.OrderRejectedEvent;
 import net.shyshkin.study.cqrs.estore.orderservice.core.mapper.OrderMapper;
 import org.axonframework.config.ProcessingGroup;
 import org.axonframework.eventhandling.EventHandler;
@@ -37,6 +38,18 @@ public class OrderEventsHandler {
                 .orElseThrow(() -> new EntityNotFoundException("Order with id `" + orderId + "` not found"));
         orderEntity.setOrderStatus(orderApprovedEvent.getOrderStatus());
         repository.save(orderEntity);
+    }
+
+    @EventHandler
+    public void on(OrderRejectedEvent orderRejectedEvent) {
+        UUID orderId = orderRejectedEvent.getOrderId();
+        OrderEntity orderEntity = repository
+                .findByOrderId(orderId)
+                .orElseThrow(() -> new EntityNotFoundException("Order with id `" + orderId + "` not found"));
+        orderEntity.setOrderStatus(orderRejectedEvent.getOrderStatus());
+        OrderEntity updatedOrder = repository.save(orderEntity);
+
+        log.debug("Order has been rejected: {}", updatedOrder);
     }
 
 }

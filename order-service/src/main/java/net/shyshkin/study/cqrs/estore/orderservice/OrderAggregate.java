@@ -7,6 +7,7 @@ import net.shyshkin.study.cqrs.estore.orderservice.command.RejectOrderCommand;
 import net.shyshkin.study.cqrs.estore.orderservice.core.OrderStatus;
 import net.shyshkin.study.cqrs.estore.orderservice.core.events.OrderApprovedEvent;
 import net.shyshkin.study.cqrs.estore.orderservice.core.events.OrderCreatedEvent;
+import net.shyshkin.study.cqrs.estore.orderservice.core.events.OrderRejectedEvent;
 import net.shyshkin.study.cqrs.estore.orderservice.core.mapper.OrderMapper;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventsourcing.EventSourcingHandler;
@@ -60,6 +61,16 @@ public class OrderAggregate {
 
     @CommandHandler
     public void handle(RejectOrderCommand rejectOrderCommand) {
-        // TODO: 26.05.2021 Create and publish the OrderRejectedEvent
+
+        OrderRejectedEvent orderRejectedEvent = OrderRejectedEvent.builder()
+                .orderId(rejectOrderCommand.getOrderId())
+                .reason(rejectOrderCommand.getReason())
+                .build();
+        AggregateLifecycle.apply(orderRejectedEvent);
+    }
+
+    @EventSourcingHandler
+    protected void on(OrderRejectedEvent orderRejectedEvent) {
+        this.orderStatus = orderRejectedEvent.getOrderStatus();
     }
 }

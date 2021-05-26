@@ -13,6 +13,7 @@ import net.shyshkin.study.cqrs.estore.orderservice.command.ApproveOrderCommand;
 import net.shyshkin.study.cqrs.estore.orderservice.command.RejectOrderCommand;
 import net.shyshkin.study.cqrs.estore.orderservice.core.events.OrderApprovedEvent;
 import net.shyshkin.study.cqrs.estore.orderservice.core.events.OrderCreatedEvent;
+import net.shyshkin.study.cqrs.estore.orderservice.core.events.OrderRejectedEvent;
 import net.shyshkin.study.cqrs.estore.orderservice.core.mapper.OrderMapper;
 import org.axonframework.commandhandling.CommandCallback;
 import org.axonframework.commandhandling.CommandMessage;
@@ -150,7 +151,7 @@ public class OrderSaga {
     public void handle(OrderApprovedEvent orderApprovedEvent) {
 
         log.debug("OrderApprovedEvent is handled: {}", orderApprovedEvent);
-        log.debug("OrderSaga if competed for order with Id: {}", orderApprovedEvent.getOrderId());
+        log.debug("OrderSaga is competed for order with Id: {}", orderApprovedEvent.getOrderId());
 
 //        SagaLifecycle.end(); //for programmatically end Saga instead of @EndSaga annotation
 
@@ -167,6 +168,15 @@ public class OrderSaga {
                 .build();
 
         commandGateway.send(rejectOrderCommand);
+    }
+
+    @EndSaga
+    @SagaEventHandler(associationProperty = "orderId")
+    public void handle(OrderRejectedEvent orderRejectedEvent) {
+
+        log.debug("OrderRejectedEvent is handled: {}", orderRejectedEvent);
+        log.debug("OrderSaga is rejected for order with Id: {}", orderRejectedEvent.getOrderId());
+
     }
 
 }
