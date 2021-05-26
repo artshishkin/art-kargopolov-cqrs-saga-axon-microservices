@@ -1,6 +1,8 @@
 package net.shyshkin.study.cqrs.estore.productservice.command;
 
+import net.shyshkin.study.cqrs.estore.core.commands.CancelProductReservationCommand;
 import net.shyshkin.study.cqrs.estore.core.commands.ReserveProductCommand;
+import net.shyshkin.study.cqrs.estore.core.events.ProductReservationCanceledEvent;
 import net.shyshkin.study.cqrs.estore.core.events.ProductReservedEvent;
 import net.shyshkin.study.cqrs.estore.productservice.core.events.ProductCreatedEvent;
 import net.shyshkin.study.cqrs.estore.productservice.mapper.ProductMapper;
@@ -58,6 +60,11 @@ public class ProductAggregate {
                 .build();
 
         AggregateLifecycle.apply(productReservedEvent);
+    }
+
+    @CommandHandler
+    public void handle(CancelProductReservationCommand cancelProductReservationCommand) {
+
     }
 
     @EventSourcingHandler
