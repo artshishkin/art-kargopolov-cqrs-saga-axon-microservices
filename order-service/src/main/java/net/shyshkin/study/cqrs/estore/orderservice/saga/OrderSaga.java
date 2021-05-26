@@ -8,12 +8,14 @@ import net.shyshkin.study.cqrs.estore.core.events.ProductReservedEvent;
 import net.shyshkin.study.cqrs.estore.core.model.User;
 import net.shyshkin.study.cqrs.estore.core.query.FetchUserPaymentDetailsQuery;
 import net.shyshkin.study.cqrs.estore.orderservice.command.ApproveOrderCommand;
+import net.shyshkin.study.cqrs.estore.orderservice.core.events.OrderApprovedEvent;
 import net.shyshkin.study.cqrs.estore.orderservice.core.events.OrderCreatedEvent;
 import net.shyshkin.study.cqrs.estore.orderservice.core.mapper.OrderMapper;
 import org.axonframework.commandhandling.CommandCallback;
 import org.axonframework.commandhandling.CommandMessage;
 import org.axonframework.commandhandling.CommandResultMessage;
 import org.axonframework.commandhandling.gateway.CommandGateway;
+import org.axonframework.modelling.saga.EndSaga;
 import org.axonframework.modelling.saga.SagaEventHandler;
 import org.axonframework.modelling.saga.StartSaga;
 import org.axonframework.queryhandling.QueryGateway;
@@ -119,6 +121,17 @@ public class OrderSaga {
 
         ApproveOrderCommand approveOrderCommand = new ApproveOrderCommand(paymentProcessedEvent.getOrderId());
         commandGateway.send(approveOrderCommand);
+
+    }
+
+    @EndSaga
+    @SagaEventHandler(associationProperty = "orderId")
+    public void handle(OrderApprovedEvent orderApprovedEvent) {
+
+        log.debug("OrderApprovedEvent is handled: {}", orderApprovedEvent);
+        log.debug("OrderSaga if competed for order with Id: {}", orderApprovedEvent.getOrderId());
+
+//        SagaLifecycle.end(); //for programmatically end Saga instead of @EndSaga annotation
 
     }
 
