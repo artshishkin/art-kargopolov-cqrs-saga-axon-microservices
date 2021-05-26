@@ -3,6 +3,7 @@ package net.shyshkin.study.cqrs.estore.orderservice;
 import lombok.NoArgsConstructor;
 import net.shyshkin.study.cqrs.estore.orderservice.command.ApproveOrderCommand;
 import net.shyshkin.study.cqrs.estore.orderservice.command.CreateOrderCommand;
+import net.shyshkin.study.cqrs.estore.orderservice.command.RejectOrderCommand;
 import net.shyshkin.study.cqrs.estore.orderservice.core.OrderStatus;
 import net.shyshkin.study.cqrs.estore.orderservice.core.events.OrderApprovedEvent;
 import net.shyshkin.study.cqrs.estore.orderservice.core.events.OrderCreatedEvent;
@@ -55,5 +56,10 @@ public class OrderAggregate {
     @EventSourcingHandler
     protected void on(OrderApprovedEvent orderApprovedEvent) {
         this.orderStatus = orderApprovedEvent.getOrderStatus();
+    }
+
+    @CommandHandler
+    public void handle(RejectOrderCommand rejectOrderCommand) {
+        // TODO: 26.05.2021 Create and publish the OrderRejectedEvent
     }
 }
