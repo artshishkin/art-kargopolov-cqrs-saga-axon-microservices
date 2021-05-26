@@ -10,6 +10,7 @@ import net.shyshkin.study.cqrs.estore.core.events.ProductReservedEvent;
 import net.shyshkin.study.cqrs.estore.core.model.User;
 import net.shyshkin.study.cqrs.estore.core.query.FetchUserPaymentDetailsQuery;
 import net.shyshkin.study.cqrs.estore.orderservice.command.ApproveOrderCommand;
+import net.shyshkin.study.cqrs.estore.orderservice.command.RejectOrderCommand;
 import net.shyshkin.study.cqrs.estore.orderservice.core.events.OrderApprovedEvent;
 import net.shyshkin.study.cqrs.estore.orderservice.core.events.OrderCreatedEvent;
 import net.shyshkin.study.cqrs.estore.orderservice.core.mapper.OrderMapper;
@@ -159,8 +160,13 @@ public class OrderSaga {
     public void handle(ProductReservationCancelledEvent productReservationCancelledEvent) {
 
         log.debug("ProductReservationCancelledEvent is handled: {}", productReservationCancelledEvent);
-        // TODO: 26.05.2021 Create and send the RejectOrderCommand
 
+        RejectOrderCommand rejectOrderCommand = RejectOrderCommand.builder()
+                .orderId(productReservationCancelledEvent.getOrderId())
+                .reason(productReservationCancelledEvent.getReason())
+                .build();
+
+        commandGateway.send(rejectOrderCommand);
     }
 
 }
