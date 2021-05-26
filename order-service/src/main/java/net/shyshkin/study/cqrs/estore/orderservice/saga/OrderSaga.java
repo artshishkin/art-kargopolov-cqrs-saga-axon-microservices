@@ -1,6 +1,7 @@
 package net.shyshkin.study.cqrs.estore.orderservice.saga;
 
 import lombok.extern.slf4j.Slf4j;
+import net.shyshkin.study.cqrs.estore.core.commands.CancelProductReservationCommand;
 import net.shyshkin.study.cqrs.estore.core.commands.ProcessPaymentCommand;
 import net.shyshkin.study.cqrs.estore.core.commands.ReserveProductCommand;
 import net.shyshkin.study.cqrs.estore.core.events.PaymentProcessedEvent;
@@ -82,11 +83,13 @@ public class OrderSaga {
             user = queryGateway.query(query, User.class).join();
         } catch (Exception ex) {
             log.error("Exception during fetching user details {}:{}", ex.getClass().getName(), ex.getMessage());
-            // TODO: 25.05.2021 Start compensating transaction
+            // Start compensating transaction
+            cancelProductReservation(productReservedEvent, ex.getMessage());
             return;
         }
         if (user == null) {
-            // TODO: 25.05.2021 Start compensating transaction
+            // Start compensating transaction
+            cancelProductReservation(productReservedEvent, "Can not fetch payment details for user " + productReservedEvent.getUserId());
             return;
         }
         log.debug("Successfully fetched payment details: {}", user);
@@ -103,15 +106,31 @@ public class OrderSaga {
             result = commandGateway.sendAndWait(processPaymentCommand, 10, TimeUnit.SECONDS);
         } catch (Exception ex) {
             log.error("There was an Exception: {}:{}", ex.getClass().getName(), ex.getMessage());
-            // TODO: 25.05.2021 Start compensating transaction
+            // Start compensating transaction
+            cancelProductReservation(productReservedEvent, "Can not process payment: " + ex.getLocalizedMessage());
             return;
         }
 
         if (result == null) {
-            // TODO: 25.05.2021 Start compensating transaction
             log.debug("Result of Process Payment Command is NULL. Starting compensating transaction");
+            // Start compensating transaction
+            cancelProductReservation(productReservedEvent, "Could not process user payment with provided user details");
+            return;
         }
         log.debug("Process Payment Command result: {}", result);
+    }
+
+    private void cancelProductReservation(ProductReservedEvent productReservedEvent, String reason) {
+
+        CancelProductReservationCommand command = CancelProductReservationCommand.builder()
+                .orderId(productReservedEvent.getOrderId())
+                .productId(productReservedEvent.getProductId())
+                .userId(productReservedEvent.getUserId())
+                .quantity(productReservedEvent.getQuantity())
+                .reason(reason)
+                .build();
+
+        commandGateway.send(command);
     }
 
     @SagaEventHandler(associationProperty = "orderId")
