@@ -2,6 +2,7 @@ package net.shyshkin.study.cqrs.estore.productservice.query;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.shyshkin.study.cqrs.estore.core.events.ProductReservationCancelledEvent;
 import net.shyshkin.study.cqrs.estore.core.events.ProductReservedEvent;
 import net.shyshkin.study.cqrs.estore.productservice.core.data.ProductEntity;
 import net.shyshkin.study.cqrs.estore.productservice.core.data.ProductRepository;
@@ -72,6 +73,23 @@ public class ProductEventsHandler {
 
         log.debug("ProductReservedEvent is called: {}", event);
 
+    }
+
+    @EventHandler
+    public void on(ProductReservationCancelledEvent event) {
+
+        log.debug("ProductReservationCancelledEvent is called: {}", event);
+
+        String productId = event.getProductId().toString();
+        ProductEntity productEntity = repository
+                .findByProductId(productId)
+                .orElseThrow(() -> new EntityNotFoundException("Product with id `" + productId + "` not found"));
+
+        int updatedQuantity = productEntity.getQuantity() + event.getQuantity();
+        productEntity.setQuantity(updatedQuantity);
+        ProductEntity savedProduct = repository.save(productEntity);
+
+        log.debug("Updated product entity: {}", savedProduct);
     }
 
 }

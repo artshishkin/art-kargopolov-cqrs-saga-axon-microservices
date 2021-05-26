@@ -5,6 +5,7 @@ import net.shyshkin.study.cqrs.estore.core.commands.CancelProductReservationComm
 import net.shyshkin.study.cqrs.estore.core.commands.ProcessPaymentCommand;
 import net.shyshkin.study.cqrs.estore.core.commands.ReserveProductCommand;
 import net.shyshkin.study.cqrs.estore.core.events.PaymentProcessedEvent;
+import net.shyshkin.study.cqrs.estore.core.events.ProductReservationCancelledEvent;
 import net.shyshkin.study.cqrs.estore.core.events.ProductReservedEvent;
 import net.shyshkin.study.cqrs.estore.core.model.User;
 import net.shyshkin.study.cqrs.estore.core.query.FetchUserPaymentDetailsQuery;
@@ -151,6 +152,14 @@ public class OrderSaga {
         log.debug("OrderSaga if competed for order with Id: {}", orderApprovedEvent.getOrderId());
 
 //        SagaLifecycle.end(); //for programmatically end Saga instead of @EndSaga annotation
+
+    }
+
+    @SagaEventHandler(associationProperty = "orderId")
+    public void handle(ProductReservationCancelledEvent productReservationCancelledEvent) {
+
+        log.debug("ProductReservationCancelledEvent is handled: {}", productReservationCancelledEvent);
+        // TODO: 26.05.2021 Create and send the RejectOrderCommand
 
     }
 
