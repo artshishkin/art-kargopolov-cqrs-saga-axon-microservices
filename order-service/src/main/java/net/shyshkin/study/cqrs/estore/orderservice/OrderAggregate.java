@@ -1,6 +1,7 @@
 package net.shyshkin.study.cqrs.estore.orderservice;
 
 import lombok.NoArgsConstructor;
+import net.shyshkin.study.cqrs.estore.orderservice.command.ApproveOrderCommand;
 import net.shyshkin.study.cqrs.estore.orderservice.command.CreateOrderCommand;
 import net.shyshkin.study.cqrs.estore.orderservice.core.OrderStatus;
 import net.shyshkin.study.cqrs.estore.orderservice.core.events.OrderCreatedEvent;
@@ -41,6 +42,13 @@ public class OrderAggregate {
         this.quantity = orderCreatedEvent.getQuantity();
         this.addressId = orderCreatedEvent.getAddressId();
         this.orderStatus = orderCreatedEvent.getOrderStatus();
+
+    }
+
+    @CommandHandler
+    public void handle(ApproveOrderCommand approveOrderCommand) {
+
+        // TODO: 26.05.2021 Create and publish OrderApprovedEvent
 
     }
 
