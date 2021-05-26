@@ -2,7 +2,7 @@ package net.shyshkin.study.cqrs.estore.productservice.command;
 
 import net.shyshkin.study.cqrs.estore.core.commands.CancelProductReservationCommand;
 import net.shyshkin.study.cqrs.estore.core.commands.ReserveProductCommand;
-import net.shyshkin.study.cqrs.estore.core.events.ProductReservationCanceledEvent;
+import net.shyshkin.study.cqrs.estore.core.events.ProductReservationCancelledEvent;
 import net.shyshkin.study.cqrs.estore.core.events.ProductReservedEvent;
 import net.shyshkin.study.cqrs.estore.productservice.core.events.ProductCreatedEvent;
 import net.shyshkin.study.cqrs.estore.productservice.mapper.ProductMapper;
@@ -64,7 +64,15 @@ public class ProductAggregate {
 
     @CommandHandler
     public void handle(CancelProductReservationCommand cancelProductReservationCommand) {
+        ProductReservationCancelledEvent productReservationCancelledEvent = ProductReservationCancelledEvent.builder()
+                .orderId(cancelProductReservationCommand.getOrderId())
+                .productId(cancelProductReservationCommand.getProductId())
+                .quantity(cancelProductReservationCommand.getQuantity())
+                .userId(cancelProductReservationCommand.getUserId())
+                .reason(cancelProductReservationCommand.getReason())
+                .build();
 
+        AggregateLifecycle.apply(productReservationCancelledEvent);
     }
 
     @EventSourcingHandler
@@ -78,6 +86,11 @@ public class ProductAggregate {
     @EventSourcingHandler
     public void on(ProductReservedEvent productReservedEvent) {
         this.quantity -= productReservedEvent.getQuantity();
+    }
+
+    @EventSourcingHandler
+    public void on(ProductReservationCancelledEvent productReservationCancelledEvent) {
+        this.quantity += productReservationCancelledEvent.getQuantity();
     }
 
 }
