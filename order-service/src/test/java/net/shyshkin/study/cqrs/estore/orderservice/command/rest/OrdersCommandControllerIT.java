@@ -84,6 +84,7 @@ class OrdersCommandControllerIT {
         String orderIdString = locationString.substring(locationString.lastIndexOf("/") + 1);
         UUID orderId = UUID.fromString(orderIdString);
 
+        // Must have Status CREATED
         await()
                 .timeout(1, TimeUnit.SECONDS)
                 .untilAsserted(() ->
@@ -100,7 +101,7 @@ class OrdersCommandControllerIT {
                                 )
                 );
 
-        Thread.sleep(1500);
+        Thread.sleep(1000);
 
         log.debug("View in logs (current or another instance of `order-service`): `OrderCreatedEvent is handled`" +
                 " followed by `ProductReservedEvent is handled` " +
@@ -108,6 +109,23 @@ class OrdersCommandControllerIT {
                 " followed by `PaymentProcessedEvent is handled` " +
                 " followed by `OrderSaga if competed for order with Id` "
         );
+
+        // Must have Status APPROVED
+        await()
+                .timeout(1, TimeUnit.SECONDS)
+                .untilAsserted(() ->
+                        assertThat(ordersRepository.findByOrderId(orderId))
+                                .hasValueSatisfying(orderEntity ->
+                                        assertThat(orderEntity)
+                                                .hasNoNullFieldsOrProperties()
+                                                .satisfies(entity -> log.debug("Entity: {}", entity))
+                                                .hasFieldOrPropertyWithValue("orderId", orderId)
+                                                .hasFieldOrPropertyWithValue("productId", createOrderRestModel.getProductId())
+                                                .hasFieldOrPropertyWithValue("addressId", createOrderRestModel.getAddressId())
+                                                .hasFieldOrPropertyWithValue("quantity", createOrderRestModel.getQuantity())
+                                                .hasFieldOrPropertyWithValue("orderStatus", OrderStatus.APPROVED)
+                                )
+                );
     }
 
     private UUID createProduct() {
