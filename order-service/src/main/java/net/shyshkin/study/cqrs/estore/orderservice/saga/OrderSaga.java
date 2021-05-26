@@ -7,6 +7,7 @@ import net.shyshkin.study.cqrs.estore.core.events.PaymentProcessedEvent;
 import net.shyshkin.study.cqrs.estore.core.events.ProductReservedEvent;
 import net.shyshkin.study.cqrs.estore.core.model.User;
 import net.shyshkin.study.cqrs.estore.core.query.FetchUserPaymentDetailsQuery;
+import net.shyshkin.study.cqrs.estore.orderservice.command.ApproveOrderCommand;
 import net.shyshkin.study.cqrs.estore.orderservice.core.events.OrderCreatedEvent;
 import net.shyshkin.study.cqrs.estore.orderservice.core.mapper.OrderMapper;
 import org.axonframework.commandhandling.CommandCallback;
@@ -115,7 +116,9 @@ public class OrderSaga {
     public void handle(PaymentProcessedEvent paymentProcessedEvent) {
 
         log.debug("PaymentProcessedEvent is handled: {}", paymentProcessedEvent);
-        // TODO: 25.05.2021 Send an ApproveOrderCommand
+
+        ApproveOrderCommand approveOrderCommand = new ApproveOrderCommand(paymentProcessedEvent.getOrderId());
+        commandGateway.send(approveOrderCommand);
 
     }
 
