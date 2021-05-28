@@ -45,6 +45,7 @@ public class OrderSaga {
 
     @Value("${app.testing.deadline:false}")
     private boolean isDeadlineTesting;
+    private String scheduleId;
 
     @Autowired
     public void setCommandGateway(CommandGateway commandGateway) {
@@ -111,7 +112,7 @@ public class OrderSaga {
         }
         log.debug("Successfully fetched payment details: {}", user);
 
-        deadlineManager.schedule(
+        scheduleId = deadlineManager.schedule(
                 Duration.ofSeconds(4),
                 PAYMENT_PROCESSING_DEADLINE,
                 productReservedEvent);
@@ -147,6 +148,8 @@ public class OrderSaga {
 
     private void cancelProductReservation(ProductReservedEvent productReservedEvent, String reason) {
 
+        cancelDeadline();
+
         CancelProductReservationCommand command = CancelProductReservationCommand.builder()
                 .orderId(productReservedEvent.getOrderId())
                 .productId(productReservedEvent.getProductId())
@@ -161,13 +164,21 @@ public class OrderSaga {
     @SagaEventHandler(associationProperty = "orderId")
     public void handle(PaymentProcessedEvent paymentProcessedEvent) {
 
-        deadlineManager.cancelAll(PAYMENT_PROCESSING_DEADLINE);
+        cancelDeadline();
 
         log.debug("PaymentProcessedEvent is handled: {}", paymentProcessedEvent);
 
         ApproveOrderCommand approveOrderCommand = new ApproveOrderCommand(paymentProcessedEvent.getOrderId());
         commandGateway.send(approveOrderCommand);
 
+    }
+
+    private void cancelDeadline() {
+//        deadlineManager.cancelAll(PAYMENT_PROCESSING_DEADLINE);
+        if (scheduleId != null) {
+            deadlineManager.cancelSchedule(PAYMENT_PROCESSING_DEADLINE, scheduleId);
+            scheduleId = null;
+        }
     }
 
     @EndSaga
