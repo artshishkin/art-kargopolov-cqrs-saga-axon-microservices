@@ -4,7 +4,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.shyshkin.study.cqrs.estore.orderservice.command.CreateOrderCommand;
 import net.shyshkin.study.cqrs.estore.orderservice.core.mapper.OrderMapper;
+import net.shyshkin.study.cqrs.estore.orderservice.core.model.OrderSummary;
+import net.shyshkin.study.cqrs.estore.orderservice.query.FindOrderQuery;
 import org.axonframework.commandhandling.gateway.CommandGateway;
+import org.axonframework.queryhandling.QueryGateway;
+import org.axonframework.queryhandling.SubscriptionQueryResult;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,6 +27,7 @@ import java.util.UUID;
 public class OrdersCommandController {
 
     private final CommandGateway commandGateway;
+    private final QueryGateway queryGateway;
     private final OrderMapper mapper;
 
     @PostMapping
@@ -37,5 +42,28 @@ public class OrdersCommandController {
                 .toUri();
         return ResponseEntity.created(location)
                 .body(createOrderCommand);
+    }
+
+    @PostMapping("with_subscription")
+    public ResponseEntity<OrderSummary> createOrderSubscribing(@Valid @RequestBody CreateOrderRestModel createOrderRestModel) {
+
+        CreateOrderCommand createOrderCommand = mapper.toCommand(createOrderRestModel);
+
+        FindOrderQuery findOrderQuery = new FindOrderQuery(createOrderCommand.getOrderId());
+
+        try (SubscriptionQueryResult<OrderSummary, OrderSummary> subscriptionQueryResult = queryGateway
+                .subscriptionQuery(findOrderQuery, OrderSummary.class, OrderSummary.class)) {
+            UUID orderId = commandGateway.sendAndWait(createOrderCommand);
+
+            OrderSummary orderSummary = subscriptionQueryResult.updates().blockFirst();
+
+            URI location = ServletUriComponentsBuilder
+                    .fromCurrentRequest()
+                    .pathSegment("{id}")
+                    .buildAndExpand(orderId)
+                    .toUri();
+            return ResponseEntity.created(location)
+                    .body(orderSummary);
+        }
     }
 }
