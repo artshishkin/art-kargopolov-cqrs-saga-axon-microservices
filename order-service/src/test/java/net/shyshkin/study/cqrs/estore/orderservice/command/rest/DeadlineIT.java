@@ -13,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.*;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.web.client.RestTemplate;
 import org.testcontainers.junit.jupiter.Container;
@@ -35,6 +36,7 @@ import static org.awaitility.Awaitility.await;
         "axon.axonserver.servers=${AXON_SERVERS}",
         "app.testing.deadline=true"
 })
+@DirtiesContext
 @Testcontainers
 class DeadlineIT {
 
