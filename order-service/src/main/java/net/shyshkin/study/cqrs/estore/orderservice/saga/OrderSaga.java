@@ -19,23 +19,31 @@ import org.axonframework.commandhandling.CommandCallback;
 import org.axonframework.commandhandling.CommandMessage;
 import org.axonframework.commandhandling.CommandResultMessage;
 import org.axonframework.commandhandling.gateway.CommandGateway;
+import org.axonframework.deadline.DeadlineManager;
 import org.axonframework.modelling.saga.EndSaga;
 import org.axonframework.modelling.saga.SagaEventHandler;
 import org.axonframework.modelling.saga.StartSaga;
 import org.axonframework.queryhandling.QueryGateway;
 import org.axonframework.spring.stereotype.Saga;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
+import java.time.Duration;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 @Saga
 @Slf4j
 public class OrderSaga {
 
+    static final String PAYMENT_PROCESSING_DEADLINE = "payment-processing-deadline";
+
     private transient CommandGateway commandGateway;
     private transient QueryGateway queryGateway;
     private transient OrderMapper mapper;
+    private transient DeadlineManager deadlineManager;
+
+    @Value("${app.testing.deadline:false}")
+    private boolean isDeadlineTesting;
 
     @Autowired
     public void setCommandGateway(CommandGateway commandGateway) {
@@ -50,6 +58,11 @@ public class OrderSaga {
     @Autowired
     public void setMapper(OrderMapper mapper) {
         this.mapper = mapper;
+    }
+
+    @Autowired
+    public void setDeadlineManager(DeadlineManager deadlineManager) {
+        this.deadlineManager = deadlineManager;
     }
 
     @StartSaga
@@ -97,6 +110,14 @@ public class OrderSaga {
         }
         log.debug("Successfully fetched payment details: {}", user);
 
+        deadlineManager.schedule(
+                Duration.ofSeconds(4),
+                PAYMENT_PROCESSING_DEADLINE,
+                productReservedEvent);
+
+        // FAKE condition for Deadline testing
+        if (isDeadlineTesting) return;
+
         ProcessPaymentCommand processPaymentCommand = ProcessPaymentCommand
                 .builder()
                 .paymentId(UUID.randomUUID())
@@ -106,7 +127,7 @@ public class OrderSaga {
 
         Object result = null;
         try {
-            result = commandGateway.sendAndWait(processPaymentCommand, 10, TimeUnit.SECONDS);
+            result = commandGateway.sendAndWait(processPaymentCommand);
         } catch (Exception ex) {
             log.error("There was an Exception: {}:{}", ex.getClass().getName(), ex.getMessage());
             // Start compensating transaction
@@ -138,6 +159,8 @@ public class OrderSaga {
 
     @SagaEventHandler(associationProperty = "orderId")
     public void handle(PaymentProcessedEvent paymentProcessedEvent) {
+
+        deadlineManager.cancelAll(PAYMENT_PROCESSING_DEADLINE);
 
         log.debug("PaymentProcessedEvent is handled: {}", paymentProcessedEvent);
 
