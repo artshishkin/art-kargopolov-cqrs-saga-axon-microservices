@@ -20,6 +20,7 @@ import org.axonframework.commandhandling.CommandMessage;
 import org.axonframework.commandhandling.CommandResultMessage;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.deadline.DeadlineManager;
+import org.axonframework.deadline.annotation.DeadlineHandler;
 import org.axonframework.modelling.saga.EndSaga;
 import org.axonframework.modelling.saga.SagaEventHandler;
 import org.axonframework.modelling.saga.StartSaga;
@@ -200,6 +201,13 @@ public class OrderSaga {
         log.debug("OrderRejectedEvent is handled: {}", orderRejectedEvent);
         log.debug("OrderSaga is rejected for order with Id: {}", orderRejectedEvent.getOrderId());
 
+    }
+
+    @DeadlineHandler(deadlineName = PAYMENT_PROCESSING_DEADLINE)
+    public void handlePaymentDeadline(ProductReservedEvent productReservedEvent) {
+
+        log.debug("Payment processing deadline took place. Sending a compensating transaction to cancel the product reservation");
+        cancelProductReservation(productReservedEvent, "Payment timeout");
     }
 
 }
