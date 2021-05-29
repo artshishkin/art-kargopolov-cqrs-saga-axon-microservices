@@ -93,6 +93,13 @@ public class OrderSaga {
                     //start compensating transaction
                     Throwable throwable = commandResultMessage.exceptionResult();
                     log.debug("There was an Exception: {}:{}", throwable.getClass().getName(), throwable.getMessage());
+
+                    RejectOrderCommand rejectOrderCommand = RejectOrderCommand.builder()
+                            .orderId(reserveProductCommand.getOrderId())
+                            .reason(throwable.getMessage())
+                            .build();
+
+                    commandGateway.send(rejectOrderCommand);
                 }
             }
         });

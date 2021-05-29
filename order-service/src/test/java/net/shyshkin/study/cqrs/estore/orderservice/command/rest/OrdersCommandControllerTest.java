@@ -3,7 +3,6 @@ package net.shyshkin.study.cqrs.estore.orderservice.command.rest;
 import lombok.extern.slf4j.Slf4j;
 import net.shyshkin.study.cqrs.estore.orderservice.command.CreateOrderCommand;
 import net.shyshkin.study.cqrs.estore.orderservice.commontest.AbstractAxonServerTest;
-import net.shyshkin.study.cqrs.estore.orderservice.core.OrderStatus;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -55,7 +54,7 @@ class OrdersCommandControllerTest extends AbstractAxonServerTest {
                                                 .hasFieldOrPropertyWithValue("productId", createOrderRestModel.getProductId())
                                                 .hasFieldOrPropertyWithValue("addressId", createOrderRestModel.getAddressId())
                                                 .hasFieldOrPropertyWithValue("quantity", createOrderRestModel.getQuantity())
-                                                .hasFieldOrPropertyWithValue("orderStatus", OrderStatus.CREATED)
+//                                                .hasFieldOrPropertyWithValue("orderStatus", OrderStatus.CREATED)
                                 )
                 );
     }
