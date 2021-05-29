@@ -4,9 +4,12 @@ import net.shyshkin.study.cqrs.estore.core.commands.ReserveProductCommand;
 import net.shyshkin.study.cqrs.estore.orderservice.command.CreateOrderCommand;
 import net.shyshkin.study.cqrs.estore.orderservice.command.rest.CreateOrderRestModel;
 import net.shyshkin.study.cqrs.estore.orderservice.core.data.OrderEntity;
+import net.shyshkin.study.cqrs.estore.orderservice.core.events.OrderApprovedEvent;
 import net.shyshkin.study.cqrs.estore.orderservice.core.events.OrderCreatedEvent;
+import net.shyshkin.study.cqrs.estore.orderservice.core.events.OrderRejectedEvent;
 import net.shyshkin.study.cqrs.estore.orderservice.core.model.OrderSummary;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 @Mapper
@@ -23,5 +26,10 @@ public interface OrderMapper {
     ReserveProductCommand toReserveProductCommand(OrderCreatedEvent event);
 
     OrderSummary toOrderSummary(OrderEntity orderEntity);
+
+    @Mapping(source = "reason", target = "message")
+    OrderSummary toOrderSummary(OrderRejectedEvent orderRejectedEvent);
+
+    OrderSummary toOrderSummary(OrderApprovedEvent orderApprovedEvent);
 
 }

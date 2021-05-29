@@ -15,6 +15,8 @@ import net.shyshkin.study.cqrs.estore.orderservice.core.events.OrderApprovedEven
 import net.shyshkin.study.cqrs.estore.orderservice.core.events.OrderCreatedEvent;
 import net.shyshkin.study.cqrs.estore.orderservice.core.events.OrderRejectedEvent;
 import net.shyshkin.study.cqrs.estore.orderservice.core.mapper.OrderMapper;
+import net.shyshkin.study.cqrs.estore.orderservice.core.model.OrderSummary;
+import net.shyshkin.study.cqrs.estore.orderservice.query.FindOrderQuery;
 import org.axonframework.commandhandling.CommandCallback;
 import org.axonframework.commandhandling.CommandMessage;
 import org.axonframework.commandhandling.CommandResultMessage;
@@ -25,6 +27,7 @@ import org.axonframework.modelling.saga.EndSaga;
 import org.axonframework.modelling.saga.SagaEventHandler;
 import org.axonframework.modelling.saga.StartSaga;
 import org.axonframework.queryhandling.QueryGateway;
+import org.axonframework.queryhandling.QueryUpdateEmitter;
 import org.axonframework.spring.stereotype.Saga;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -42,6 +45,7 @@ public class OrderSaga {
     private transient QueryGateway queryGateway;
     private transient OrderMapper mapper;
     private transient DeadlineManager deadlineManager;
+    private transient QueryUpdateEmitter queryUpdateEmitter;
 
     @Value("${app.testing.deadline:false}")
     private boolean isDeadlineTesting;
@@ -65,6 +69,11 @@ public class OrderSaga {
     @Autowired
     public void setDeadlineManager(DeadlineManager deadlineManager) {
         this.deadlineManager = deadlineManager;
+    }
+
+    @Autowired
+    public void setQueryUpdateEmitter(QueryUpdateEmitter queryUpdateEmitter) {
+        this.queryUpdateEmitter = queryUpdateEmitter;
     }
 
     @StartSaga
@@ -188,7 +197,10 @@ public class OrderSaga {
         log.debug("OrderApprovedEvent is handled: {}", orderApprovedEvent);
         log.debug("OrderSaga is competed for order with Id: {}", orderApprovedEvent.getOrderId());
 
-//        SagaLifecycle.end(); //for programmatically end Saga instead of @EndSaga annotation
+        OrderSummary orderSummary = mapper.toOrderSummary(orderApprovedEvent);
+        queryUpdateEmitter.emit(FindOrderQuery.class, query -> true, orderSummary);
+
+        //        SagaLifecycle.end(); //for programmatically end Saga instead of @EndSaga annotation
 
     }
 
@@ -211,6 +223,9 @@ public class OrderSaga {
 
         log.debug("OrderRejectedEvent is handled: {}", orderRejectedEvent);
         log.debug("OrderSaga is rejected for order with Id: {}", orderRejectedEvent.getOrderId());
+
+        OrderSummary orderSummary = mapper.toOrderSummary(orderRejectedEvent);
+        queryUpdateEmitter.emit(FindOrderQuery.class, query -> true, orderSummary);
 
     }
 
