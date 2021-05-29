@@ -203,9 +203,9 @@ class OrdersCommandControllerIT {
                 .postForEntity("/orders/with_subscription", createOrderRestModel, OrderSummary.class);
 
         //then
-        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         URI location = responseEntity.getHeaders().getLocation();
-        assertThat(location).isNotNull();
+        assertThat(location).isNull();
 
         OrderSummary orderSummary = responseEntity.getBody();
         assertThat(orderSummary.getMessage()).isEqualTo("Insufficient number of items in stock");
@@ -213,11 +213,7 @@ class OrdersCommandControllerIT {
 
         log.debug("Response entity: {}", responseEntity);
 
-        String locationString = location.toString();
-        String orderIdString = locationString.substring(locationString.lastIndexOf("/") + 1);
-        UUID orderId = UUID.fromString(orderIdString);
-
-        assertThat(orderSummary.getOrderId()).isEqualTo(orderId);
+        UUID orderId = orderSummary.getOrderId();
 
         log.debug("View in logs (current or another instance of `order-service`): `OrderCreatedEvent is handled`" +
                 " followed by `ProductReservedEvent is handled` " +

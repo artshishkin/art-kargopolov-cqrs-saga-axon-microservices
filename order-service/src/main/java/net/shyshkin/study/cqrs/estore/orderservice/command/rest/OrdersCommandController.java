@@ -9,6 +9,7 @@ import net.shyshkin.study.cqrs.estore.orderservice.query.FindOrderQuery;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.queryhandling.QueryGateway;
 import org.axonframework.queryhandling.SubscriptionQueryResult;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -57,13 +58,25 @@ public class OrdersCommandController {
 
             OrderSummary orderSummary = subscriptionQueryResult.updates().blockFirst();
 
-            URI location = ServletUriComponentsBuilder
-                    .fromCurrentRequest()
-                    .pathSegment("{id}")
-                    .buildAndExpand(orderId)
-                    .toUri();
-            return ResponseEntity.created(location)
-                    .body(orderSummary);
+            switch (orderSummary.getOrderStatus()) {
+                case APPROVED:
+                    URI location = ServletUriComponentsBuilder
+                            .fromCurrentRequest()
+                            .pathSegment("{id}")
+                            .buildAndExpand(orderId)
+                            .toUri();
+                    return ResponseEntity.created(location)
+                            .body(orderSummary);
+                case REJECTED:
+                    return ResponseEntity
+                            .badRequest()
+                            .body(orderSummary);
+                case CREATED:
+                default:
+                    return ResponseEntity
+                            .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                            .body(orderSummary);
+            }
         }
     }
 }
