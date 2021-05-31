@@ -1,5 +1,6 @@
 package net.shyshkin.study.cqrs.estore.productservice.core.errorhandling;
 
+import org.axonframework.axonserver.connector.query.AxonServerRemoteQueryHandlingException;
 import org.axonframework.commandhandling.CommandExecutionException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,5 +31,14 @@ public class ProductServiceErrorHandler {
                 .message(ex.getMessage())
                 .build();
         return new ResponseEntity<>(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler({AxonServerRemoteQueryHandlingException.class})
+    public ResponseEntity<Object> handleEntityNotFoundException(Exception ex) {
+
+        ErrorMessage errorMessage = ErrorMessage.builder()
+                .message(ex.getMessage())
+                .build();
+        return new ResponseEntity<>(errorMessage, HttpStatus.NOT_FOUND);
     }
 }
