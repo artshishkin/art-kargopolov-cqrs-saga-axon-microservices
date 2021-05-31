@@ -12,6 +12,8 @@ public class TestComposeContainer extends DockerComposeContainer<TestComposeCont
     private static final String COMPOSE_FILE_PATH = "src/test/resources/compose-test.yml";
     private static TestComposeContainer container;
 
+    private static boolean containerStarted = false;
+
     private String productServiceHost;
     private Integer productServicePort;
 
@@ -36,7 +38,9 @@ public class TestComposeContainer extends DockerComposeContainer<TestComposeCont
     @Override
     public void start() {
 
-        super.start();
+        if (!containerStarted) super.start();
+
+        containerStarted = true;
 
         String axonHost = container.getServiceHost("axon-server_1", 8124);
         Integer axonPort = container.getServicePort("axon-server_1", 8124);
