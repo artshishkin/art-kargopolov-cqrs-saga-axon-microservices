@@ -2,6 +2,7 @@ package net.shyshkin.study.cqrs.estore.orderservice.command.rest;
 
 import com.github.javafaker.Faker;
 import lombok.extern.slf4j.Slf4j;
+import net.shyshkin.study.cqrs.estore.core.model.ProductIdDto;
 import net.shyshkin.study.cqrs.estore.orderservice.command.CreateOrderCommand;
 import net.shyshkin.study.cqrs.estore.orderservice.core.OrderStatus;
 import net.shyshkin.study.cqrs.estore.orderservice.core.data.OrdersRepository;
@@ -142,13 +143,11 @@ class CompensatingTransactionsIT {
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         HttpEntity<String> requestEntity = new RequestEntity<>(createProductRestModelJson, headers, HttpMethod.POST, null, null);
-        ResponseEntity<String> responseEntity = restTemplate.exchange(
+        ResponseEntity<ProductIdDto> responseEntity = restTemplate.exchange(
                 "/products",
                 HttpMethod.POST,
                 requestEntity,
-                String.class);
-        String response = responseEntity.getBody();
-        response = response.replace("Http POST: ", "");
-        return UUID.fromString(response);
+                ProductIdDto.class);
+        return responseEntity.getBody().getProductId();
     }
 }
