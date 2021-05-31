@@ -13,12 +13,13 @@ import org.axonframework.modelling.command.AggregateLifecycle;
 import org.axonframework.spring.stereotype.Aggregate;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 @Aggregate
 public class ProductAggregate {
 
     @AggregateIdentifier
-    private String productId;
+    private UUID productId;
     private String title;
     private BigDecimal price;
     private Integer quantity;

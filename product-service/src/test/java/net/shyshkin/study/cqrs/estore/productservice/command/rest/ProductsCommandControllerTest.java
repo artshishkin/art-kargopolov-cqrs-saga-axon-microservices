@@ -19,6 +19,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.math.BigDecimal;
 import java.util.Optional;
+import java.util.UUID;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -72,9 +73,11 @@ class ProductsCommandControllerTest  extends AbstractAxonServerTest {
                 .andExpect(content().string(startsWith("Http POST: ")))
                 .andReturn();
 
-        String productId = mvcResult.getResponse()
+        String productIdString = mvcResult.getResponse()
                 .getContentAsString()
                 .replace("Http POST: ", "");
+
+        UUID productId = UUID.fromString(productIdString);
 
         log.debug("Product Id: {}", productId);
 

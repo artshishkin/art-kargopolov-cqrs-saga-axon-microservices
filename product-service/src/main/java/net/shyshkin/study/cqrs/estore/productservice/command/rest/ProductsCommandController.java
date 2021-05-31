@@ -8,6 +8,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/products")
@@ -22,7 +23,7 @@ public class ProductsCommandController {
     public String createProduct(@Valid @RequestBody CreateProductRestModel createProductRestModel) {
         CreateProductCommand createProductCommand = mapper.toCreateCommand(createProductRestModel);
 
-        String returnValue = commandGateway.sendAndWait(createProductCommand);
+        UUID returnValue = commandGateway.sendAndWait(createProductCommand);
         return "Http POST: " + returnValue;
     }
 

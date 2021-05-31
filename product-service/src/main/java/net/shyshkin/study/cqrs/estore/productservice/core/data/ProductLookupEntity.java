@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
+import java.util.UUID;
 
 @Entity
 @Data
@@ -19,7 +20,7 @@ public class ProductLookupEntity implements Serializable {
 
     @Id
     @EqualsAndHashCode.Include
-    private String productId;
+    private UUID productId;
 
     @Column(unique = true)
     private String title;

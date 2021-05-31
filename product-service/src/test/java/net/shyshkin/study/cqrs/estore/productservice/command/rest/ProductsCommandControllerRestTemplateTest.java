@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.math.BigDecimal;
 import java.util.Optional;
+import java.util.UUID;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -51,7 +52,8 @@ class ProductsCommandControllerRestTemplateTest  extends AbstractAxonServerTest 
         String body = responseEntity.getBody();
         assertThat(body).startsWith("Http POST: ");
 
-        String productId = body.replace("Http POST: ", "");
+        String productIdString = body.replace("Http POST: ", "");
+        UUID productId = UUID.fromString(productIdString);
 
         log.debug("Product Id: {}", productId);
 

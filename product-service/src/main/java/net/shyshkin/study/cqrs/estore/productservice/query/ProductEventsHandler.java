@@ -14,6 +14,7 @@ import org.axonframework.messaging.interceptors.ExceptionHandler;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.UUID;
 
 @Slf4j
 @Component
@@ -62,7 +63,7 @@ public class ProductEventsHandler {
     @EventHandler
     public void on(ProductReservedEvent event) {
 
-        String productId = event.getProductId().toString();
+        UUID productId = event.getProductId();
         ProductEntity productEntity = repository
                 .findByProductId(productId)
                 .orElseThrow(() -> new EntityNotFoundException("Product with id `" + productId + "` not found"));
@@ -80,7 +81,7 @@ public class ProductEventsHandler {
 
         log.debug("ProductReservationCancelledEvent is called: {}", event);
 
-        String productId = event.getProductId().toString();
+        UUID productId = event.getProductId();
         ProductEntity productEntity = repository
                 .findByProductId(productId)
                 .orElseThrow(() -> new EntityNotFoundException("Product with id `" + productId + "` not found"));

@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.UUID;
 
 @Entity
 @Table(name = "products")
@@ -21,7 +22,7 @@ public class ProductEntity implements Serializable {
     @Id
     @Column(unique = true)
     @EqualsAndHashCode.Include
-    private String productId;
+    private UUID productId;
 
     @Column(unique = true)
     private String title;

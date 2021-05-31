@@ -36,13 +36,13 @@ class ProductsQueryControllerTest extends AbstractAxonServerTest {
         //given
         CreateProductCommand createProductCommand = CreateProductCommand
                 .builder()
-                .productId(UUID.randomUUID().toString())
+                .productId(UUID.randomUUID())
                 .price(new BigDecimal("123.00"))
                 .title(Faker.instance().commerce().productName())
                 .quantity(Faker.instance().random().nextInt(1, 10))
                 .build();
 
-        String productId = commandGateway.sendAndWait(createProductCommand, 1, TimeUnit.SECONDS);
+        UUID productId = commandGateway.sendAndWait(createProductCommand, 1, TimeUnit.SECONDS);
         log.debug("Product Id: {}", productId);
 
         await()

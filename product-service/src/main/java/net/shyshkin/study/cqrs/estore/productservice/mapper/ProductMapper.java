@@ -17,7 +17,7 @@ public interface ProductMapper {
 
     ProductMapper INSTANCE = Mappers.getMapper(ProductMapper.class);
 
-    @Mapping(target = "productId", expression = "java(UUID.randomUUID().toString())")
+    @Mapping(target = "productId", expression = "java(UUID.randomUUID())")
     CreateProductCommand toCreateCommand(CreateProductRestModel model);
 
     ProductCreatedEvent toCreatedEvent(CreateProductCommand createProductCommand);

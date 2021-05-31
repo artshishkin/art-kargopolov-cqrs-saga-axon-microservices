@@ -30,7 +30,7 @@ class ProductEventsHandlerExceptionHandlingTest  extends AbstractAxonServerTest 
     })
     void handleExceptionInEventHandler(String testName, String title, String expectedLogMessage) {
         //given
-        String productId = UUID.randomUUID().toString();
+        UUID productId = UUID.randomUUID();
         CreateProductCommand createProductCommand = CreateProductCommand.builder()
                 .productId(productId)
                 .title(title)
@@ -39,7 +39,7 @@ class ProductEventsHandlerExceptionHandlingTest  extends AbstractAxonServerTest 
                 .build();
 
         //when
-        String returnValue = commandGateway.sendAndWait(createProductCommand);
+        UUID returnValue = commandGateway.sendAndWait(createProductCommand);
 
         //then
         assertThat(returnValue).isEqualTo(productId);
