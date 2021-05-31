@@ -3,6 +3,7 @@ package net.shyshkin.study.cqrs.estore.productservice.command.rest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javafaker.Faker;
 import lombok.extern.slf4j.Slf4j;
+import net.shyshkin.study.cqrs.estore.core.model.ProductIdDto;
 import net.shyshkin.study.cqrs.estore.productservice.commontest.AbstractAxonServerTest;
 import net.shyshkin.study.cqrs.estore.productservice.core.data.ProductEntity;
 import net.shyshkin.study.cqrs.estore.productservice.core.data.ProductRepository;
@@ -14,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.math.BigDecimal;
+import java.net.URI;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -22,7 +24,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 
 @Slf4j
-class ProductsCommandControllerRestTemplateTest  extends AbstractAxonServerTest {
+class ProductsCommandControllerRestTemplateTest extends AbstractAxonServerTest {
 
     @Autowired
     ObjectMapper objectMapper;
@@ -42,18 +44,19 @@ class ProductsCommandControllerRestTemplateTest  extends AbstractAxonServerTest 
                 .build();
 
         //when
-        ResponseEntity<String> responseEntity = restTemplate
+        ResponseEntity<ProductIdDto> responseEntity = restTemplate
                 .postForEntity("/products",
                         createProductRestModel,
-                        String.class);
+                        ProductIdDto.class);
 
         //then
-        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
-        String body = responseEntity.getBody();
-        assertThat(body).startsWith("Http POST: ");
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        ProductIdDto body = responseEntity.getBody();
+        URI location = responseEntity.getHeaders().getLocation();
 
-        String productIdString = body.replace("Http POST: ", "");
-        UUID productId = UUID.fromString(productIdString);
+        assertThat(location).isNotNull();
+        UUID productId = body.getProductId();
+        assertThat(location.toString()).endsWith(productId.toString());
 
         log.debug("Product Id: {}", productId);
 

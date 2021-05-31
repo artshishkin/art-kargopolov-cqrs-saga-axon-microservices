@@ -3,6 +3,7 @@ package net.shyshkin.study.cqrs.estore.productservice.command.rest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javafaker.Faker;
 import lombok.extern.slf4j.Slf4j;
+import net.shyshkin.study.cqrs.estore.core.model.ProductIdDto;
 import net.shyshkin.study.cqrs.estore.productservice.commontest.AbstractAxonServerTest;
 import net.shyshkin.study.cqrs.estore.productservice.core.data.ProductEntity;
 import net.shyshkin.study.cqrs.estore.productservice.core.data.ProductRepository;
@@ -24,14 +25,13 @@ import java.util.UUID;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
-import static org.hamcrest.CoreMatchers.startsWith;
+import static org.springframework.http.HttpHeaders.LOCATION;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @Slf4j
-class ProductsCommandControllerTest  extends AbstractAxonServerTest {
+class ProductsCommandControllerTest extends AbstractAxonServerTest {
 
     MockMvc mockMvc;
 
@@ -69,17 +69,21 @@ class ProductsCommandControllerTest  extends AbstractAxonServerTest {
                 .content(jsonPayload))
 
                 //then
-                .andExpect(status().isOk())
-                .andExpect(content().string(startsWith("Http POST: ")))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.productId").isNotEmpty())
+                .andExpect(header().exists(LOCATION))
                 .andReturn();
 
-        String productIdString = mvcResult.getResponse()
-                .getContentAsString()
-                .replace("Http POST: ", "");
+        String productIdDtoString = mvcResult.getResponse()
+                .getContentAsString();
 
-        UUID productId = UUID.fromString(productIdString);
+        ProductIdDto productIdDto = objectMapper.readValue(productIdDtoString, ProductIdDto.class);
+        String location = mvcResult.getResponse().getHeader(LOCATION);
+        UUID productId = productIdDto.getProductId();
 
         log.debug("Product Id: {}", productId);
+
+        assertThat(location).endsWith(productId.toString());
 
         await()
                 .timeout(1L, SECONDS)

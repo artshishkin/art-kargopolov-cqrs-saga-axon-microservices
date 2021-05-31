@@ -2,6 +2,7 @@ package net.shyshkin.study.cqrs.estore.productservice.command.interceptors;
 
 import com.github.javafaker.Faker;
 import lombok.extern.slf4j.Slf4j;
+import net.shyshkin.study.cqrs.estore.core.model.ProductIdDto;
 import net.shyshkin.study.cqrs.estore.productservice.command.rest.CreateProductRestModel;
 import net.shyshkin.study.cqrs.estore.productservice.commontest.AbstractAxonServerTest;
 import net.shyshkin.study.cqrs.estore.productservice.core.data.ProductLookupEntity;
@@ -104,19 +105,20 @@ class CreateProductCommandInterceptorTest extends AbstractAxonServerTest {
                 .build();
 
         //when
-        ResponseEntity<String> responseEntity = restTemplate
+        ResponseEntity<ProductIdDto> responseEntity = restTemplate
                 .postForEntity("/products",
                         createProductRestModel,
-                        String.class);
+                        ProductIdDto.class);
 
         //then
-        String body = responseEntity.getBody();
-        log.debug("Response body: {}", body);
-        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(body).startsWith("Http POST: ");
-        String productId = body.replace("Http POST: ", "");
-        UUID uuid = UUID.fromString(productId);
-        assertThat(uuid).isNotNull();
+        ProductIdDto productIdDto = responseEntity.getBody();
+        log.debug("Response body: {}", productIdDto);
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+
+        UUID productId = productIdDto.getProductId();
+        assertThat(productId).isNotNull();
+
+        assertThat(responseEntity.getHeaders().getLocation()).isNotNull();
 
         return title;
     }
