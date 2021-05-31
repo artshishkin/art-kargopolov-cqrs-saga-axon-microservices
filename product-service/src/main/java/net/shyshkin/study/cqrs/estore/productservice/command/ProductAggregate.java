@@ -15,7 +15,7 @@ import org.axonframework.spring.stereotype.Aggregate;
 import java.math.BigDecimal;
 import java.util.UUID;
 
-@Aggregate
+@Aggregate(snapshotTriggerDefinition = "productSnapshotTriggerDefinition")
 public class ProductAggregate {
 
     @AggregateIdentifier
