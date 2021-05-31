@@ -7,6 +7,7 @@ import net.shyshkin.study.cqrs.estore.productservice.core.events.ProductCreatedE
 import net.shyshkin.study.cqrs.estore.productservice.mapper.ProductMapper;
 import org.axonframework.config.ProcessingGroup;
 import org.axonframework.eventhandling.EventHandler;
+import org.axonframework.eventhandling.ResetHandler;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -23,4 +24,8 @@ public class ProductLookupEventsHandler {
         repository.save(productLookupEntity);
     }
 
+    @ResetHandler
+    public void reset(){
+        repository.deleteAll();
+    }
 }
