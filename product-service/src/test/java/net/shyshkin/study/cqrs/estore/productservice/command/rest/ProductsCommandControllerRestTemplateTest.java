@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javafaker.Faker;
 import lombok.extern.slf4j.Slf4j;
 import net.shyshkin.study.cqrs.estore.core.model.ProductIdDto;
-import net.shyshkin.study.cqrs.estore.productservice.commontest.AbstractAxonServerTest;
+import net.shyshkin.study.cqrs.estore.productservice.commontest.AbstractGlobalAxonServerTest;
 import net.shyshkin.study.cqrs.estore.productservice.core.data.ProductEntity;
 import net.shyshkin.study.cqrs.estore.productservice.core.data.ProductRepository;
 import org.junit.jupiter.api.Test;
@@ -24,7 +24,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 
 @Slf4j
-class ProductsCommandControllerRestTemplateTest extends AbstractAxonServerTest {
+class ProductsCommandControllerRestTemplateTest extends AbstractGlobalAxonServerTest {
 
     @Autowired
     ObjectMapper objectMapper;

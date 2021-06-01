@@ -4,7 +4,7 @@ import com.github.javafaker.Faker;
 import lombok.extern.slf4j.Slf4j;
 import net.shyshkin.study.cqrs.estore.core.model.ProductIdDto;
 import net.shyshkin.study.cqrs.estore.productservice.command.rest.CreateProductRestModel;
-import net.shyshkin.study.cqrs.estore.productservice.commontest.AbstractAxonServerTest;
+import net.shyshkin.study.cqrs.estore.productservice.commontest.AbstractGlobalAxonServerTest;
 import net.shyshkin.study.cqrs.estore.productservice.core.data.ProductLookupEntity;
 import net.shyshkin.study.cqrs.estore.productservice.core.errorhandling.ErrorMessage;
 import org.junit.jupiter.api.Test;
@@ -19,7 +19,7 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j
-class CreateProductCommandInterceptorTest extends AbstractAxonServerTest {
+class CreateProductCommandInterceptorTest extends AbstractGlobalAxonServerTest {
 
     @Test
     void createProduct_validationFailedInInterceptor() throws Exception {

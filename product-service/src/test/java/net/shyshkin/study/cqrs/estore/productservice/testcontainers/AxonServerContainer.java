@@ -12,14 +12,17 @@ public class AxonServerContainer extends GenericContainer<AxonServerContainer> {
         super(IMAGE_VERSION);
     }
 
-    public static AxonServerContainer getInstance() {
+    public static AxonServerContainer createNewInstance() {
+        return new AxonServerContainer()
+                .withExposedPorts(8024, 8124)
+                .waitingFor(
+                        Wait.forLogMessage(".*Started AxonServer in.*\\n", 1)
+                );
+    }
+
+    public static AxonServerContainer getGlobalInstance() {
         if (container == null) {
-            container = new AxonServerContainer()
-                    .withExposedPorts(8024, 8124)
-                    .waitingFor(
-                            Wait.forLogMessage(".*Started AxonServer in.*\\n", 1)
-                    );
-            ;
+            container = createNewInstance();
         }
         return container;
     }

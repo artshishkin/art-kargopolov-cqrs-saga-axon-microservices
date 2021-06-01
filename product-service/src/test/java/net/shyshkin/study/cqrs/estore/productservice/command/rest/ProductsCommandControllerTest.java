@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javafaker.Faker;
 import lombok.extern.slf4j.Slf4j;
 import net.shyshkin.study.cqrs.estore.core.model.ProductIdDto;
-import net.shyshkin.study.cqrs.estore.productservice.commontest.AbstractAxonServerTest;
+import net.shyshkin.study.cqrs.estore.productservice.commontest.AbstractGlobalAxonServerTest;
 import net.shyshkin.study.cqrs.estore.productservice.core.data.ProductEntity;
 import net.shyshkin.study.cqrs.estore.productservice.core.data.ProductRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,7 +31,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @Slf4j
-class ProductsCommandControllerTest extends AbstractAxonServerTest {
+class ProductsCommandControllerTest extends AbstractGlobalAxonServerTest {
 
     MockMvc mockMvc;
 

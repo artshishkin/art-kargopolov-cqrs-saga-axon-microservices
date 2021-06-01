@@ -2,7 +2,7 @@ package net.shyshkin.study.cqrs.estore.productservice.command;
 
 import lombok.extern.slf4j.Slf4j;
 import net.shyshkin.study.cqrs.estore.productservice.command.rest.CreateProductRestModel;
-import net.shyshkin.study.cqrs.estore.productservice.commontest.AbstractAxonServerTest;
+import net.shyshkin.study.cqrs.estore.productservice.commontest.AbstractGlobalAxonServerTest;
 import net.shyshkin.study.cqrs.estore.productservice.core.errorhandling.ErrorMessage;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -14,7 +14,7 @@ import static java.time.LocalDateTime.now;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j
-class ProductAggregateErrorHandlingTest extends AbstractAxonServerTest {
+class ProductAggregateErrorHandlingTest extends AbstractGlobalAxonServerTest {
 
     @Test
     void createProduct_errorInProductAggregate() {

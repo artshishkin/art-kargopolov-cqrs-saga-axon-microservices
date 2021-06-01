@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestPropertySource;
 
 import java.math.BigDecimal;
@@ -27,9 +26,11 @@ import static org.awaitility.Awaitility.await;
 @Slf4j
 @TestPropertySource(properties = {
         "axon.eventhandling.processors.product-group.mode=tracking",
-        "logging.level.net.shyshkin.study.cqrs.estore.productservice.command.interceptors=info"
+        "logging.level.net.shyshkin.study.cqrs.estore.productservice.command.interceptors=info",
+//        "spring.jpa.show-sql=true",
+//        "logging.level.org.hibernate.SQL=debug",
+//        "logging.level.org.hibernate.type.descriptor.sql.BasicBinder=TRACE"
 })
-@DirtiesContext
 class EventsReplayControllerTest extends AbstractAxonServerTest {
 
     @Autowired
@@ -39,12 +40,14 @@ class EventsReplayControllerTest extends AbstractAxonServerTest {
     CommandGateway commandGateway;
 
     @Test
-    void resetEvents() {
+    void resetEvents() throws InterruptedException {
         //given
         long countInit = repository.count();
         long countLookupInit = lookupRepository.count();
 
         int createdProducts = createStubProducts();
+
+        Thread.sleep(1000);
 
         long initialCount = createdProducts + countInit;
         long initialLookupCount = createdProducts + countLookupInit;
@@ -70,6 +73,7 @@ class EventsReplayControllerTest extends AbstractAxonServerTest {
                 .untilAsserted(() -> {
                     long count = repository.count();
                     log.debug("Product repository contains {} products", count);
+                    log.debug("Lookup repository contains {} products", lookupRepository.count());
                     assertThat(count).isEqualTo(initialCount);
                     assertThat(lookupRepository.count()).isEqualTo(initialLookupCount);
                 });

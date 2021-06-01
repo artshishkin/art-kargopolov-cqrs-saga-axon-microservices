@@ -3,7 +3,7 @@ package net.shyshkin.study.cqrs.estore.productservice.query.rest;
 import com.github.javafaker.Faker;
 import lombok.extern.slf4j.Slf4j;
 import net.shyshkin.study.cqrs.estore.productservice.command.CreateProductCommand;
-import net.shyshkin.study.cqrs.estore.productservice.commontest.AbstractAxonServerTest;
+import net.shyshkin.study.cqrs.estore.productservice.commontest.AbstractGlobalAxonServerTest;
 import net.shyshkin.study.cqrs.estore.productservice.core.data.ProductRepository;
 import net.shyshkin.study.cqrs.estore.productservice.core.errorhandling.ErrorMessage;
 import org.axonframework.commandhandling.gateway.CommandGateway;
@@ -25,7 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 
 @Slf4j
-class ProductsQueryControllerTest extends AbstractAxonServerTest {
+class ProductsQueryControllerTest extends AbstractGlobalAxonServerTest {
 
     @Autowired
     CommandGateway commandGateway;

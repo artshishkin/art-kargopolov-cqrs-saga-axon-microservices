@@ -4,7 +4,7 @@ import com.github.javafaker.Faker;
 import lombok.extern.slf4j.Slf4j;
 import net.shyshkin.study.cqrs.estore.core.commands.CancelProductReservationCommand;
 import net.shyshkin.study.cqrs.estore.core.commands.ReserveProductCommand;
-import net.shyshkin.study.cqrs.estore.productservice.commontest.AbstractAxonServerTest;
+import net.shyshkin.study.cqrs.estore.productservice.commontest.AbstractGlobalAxonServerTest;
 import net.shyshkin.study.cqrs.estore.productservice.core.data.ProductRepository;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.junit.jupiter.api.Test;
@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 
 @Slf4j
-class ProductSnapshotTest extends AbstractAxonServerTest {
+class ProductSnapshotTest extends AbstractGlobalAxonServerTest {
 
     @Autowired
     CommandGateway commandGateway;

@@ -18,7 +18,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
         "axon.axonserver.servers=${AXON_SERVERS}"
 })
 @Testcontainers
-public abstract class AbstractAxonServerTest {
+public abstract class AbstractGlobalAxonServerTest {
 
     @Autowired
     protected TestRestTemplate restTemplate;
@@ -27,6 +27,6 @@ public abstract class AbstractAxonServerTest {
     protected ProductLookupRepository lookupRepository;
 
     @Container
-    public static AxonServerContainer axonServer = AxonServerContainer.createNewInstance();
+    public static AxonServerContainer axonServer = AxonServerContainer.getGlobalInstance();
 
 }

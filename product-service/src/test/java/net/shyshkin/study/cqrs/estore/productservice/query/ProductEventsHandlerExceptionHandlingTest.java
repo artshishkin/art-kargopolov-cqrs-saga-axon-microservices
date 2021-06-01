@@ -2,7 +2,7 @@ package net.shyshkin.study.cqrs.estore.productservice.query;
 
 import lombok.extern.slf4j.Slf4j;
 import net.shyshkin.study.cqrs.estore.productservice.command.CreateProductCommand;
-import net.shyshkin.study.cqrs.estore.productservice.commontest.AbstractAxonServerTest;
+import net.shyshkin.study.cqrs.estore.productservice.commontest.AbstractGlobalAxonServerTest;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -17,7 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 
 @Slf4j
-class ProductEventsHandlerExceptionHandlingTest  extends AbstractAxonServerTest {
+class ProductEventsHandlerExceptionHandlingTest  extends AbstractGlobalAxonServerTest {
 
     @Autowired
     CommandGateway commandGateway;

@@ -2,7 +2,7 @@ package net.shyshkin.study.cqrs.estore.productservice.core.errorhandling;
 
 import lombok.extern.slf4j.Slf4j;
 import net.shyshkin.study.cqrs.estore.productservice.command.rest.CreateProductRestModel;
-import net.shyshkin.study.cqrs.estore.productservice.commontest.AbstractAxonServerTest;
+import net.shyshkin.study.cqrs.estore.productservice.commontest.AbstractGlobalAxonServerTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -20,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 
 @Slf4j
-class ProductServiceEventsErrorHandlerWorkTest extends AbstractAxonServerTest {
+class ProductServiceEventsErrorHandlerWorkTest extends AbstractGlobalAxonServerTest {
 
     @ParameterizedTest(name = "[{index}] {0}")
     @DisplayName("Handling exception in ListenerInvocationErrorHandler method")
