@@ -1,7 +1,9 @@
 package net.shyshkin.study.cqrs.estore.orderservice.core.mapper;
 
 import net.shyshkin.study.cqrs.estore.core.commands.ReserveProductCommand;
+import net.shyshkin.study.cqrs.estore.orderservice.command.ApproveOrderCommand;
 import net.shyshkin.study.cqrs.estore.orderservice.command.CreateOrderCommand;
+import net.shyshkin.study.cqrs.estore.orderservice.command.RejectOrderCommand;
 import net.shyshkin.study.cqrs.estore.orderservice.command.rest.CreateOrderRestModel;
 import net.shyshkin.study.cqrs.estore.orderservice.core.data.OrderEntity;
 import net.shyshkin.study.cqrs.estore.orderservice.core.events.OrderApprovedEvent;
@@ -31,5 +33,9 @@ public interface OrderMapper {
     OrderSummary toOrderSummary(OrderRejectedEvent orderRejectedEvent);
 
     OrderSummary toOrderSummary(OrderApprovedEvent orderApprovedEvent);
+
+    OrderApprovedEvent toEvent(ApproveOrderCommand command);
+
+    OrderRejectedEvent toEvent(RejectOrderCommand command);
 
 }

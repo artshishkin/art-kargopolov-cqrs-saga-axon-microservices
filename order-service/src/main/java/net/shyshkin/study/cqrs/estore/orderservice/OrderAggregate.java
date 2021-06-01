@@ -14,6 +14,7 @@ import org.axonframework.eventsourcing.EventSourcingHandler;
 import org.axonframework.modelling.command.AggregateIdentifier;
 import org.axonframework.modelling.command.AggregateLifecycle;
 import org.axonframework.spring.stereotype.Aggregate;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.UUID;
 
@@ -29,12 +30,19 @@ public class OrderAggregate {
     private UUID addressId;
     private OrderStatus orderStatus;
 
+    private transient OrderMapper mapper;
+
     @CommandHandler
     public OrderAggregate(CreateOrderCommand createOrderCommand) {
 
         OrderCreatedEvent orderCreatedEvent = OrderMapper.INSTANCE.toOrderCreatedEvent(createOrderCommand);
         AggregateLifecycle.apply(orderCreatedEvent);
 
+    }
+
+    @Autowired
+    public void setMapper(OrderMapper mapper) {
+        this.mapper = mapper;
     }
 
     @EventSourcingHandler
@@ -50,7 +58,7 @@ public class OrderAggregate {
 
     @CommandHandler
     public void handle(ApproveOrderCommand approveOrderCommand) {
-        OrderApprovedEvent orderApprovedEvent = new OrderApprovedEvent(approveOrderCommand.getOrderId());
+        OrderApprovedEvent orderApprovedEvent = mapper.toEvent(approveOrderCommand);
         AggregateLifecycle.apply(orderApprovedEvent);
     }
 
@@ -61,11 +69,7 @@ public class OrderAggregate {
 
     @CommandHandler
     public void handle(RejectOrderCommand rejectOrderCommand) {
-
-        OrderRejectedEvent orderRejectedEvent = OrderRejectedEvent.builder()
-                .orderId(rejectOrderCommand.getOrderId())
-                .reason(rejectOrderCommand.getReason())
-                .build();
+        OrderRejectedEvent orderRejectedEvent = mapper.toEvent(rejectOrderCommand);
         AggregateLifecycle.apply(orderRejectedEvent);
     }
 
