@@ -96,7 +96,7 @@ public class ProductEventsHandler {
 
     @ResetHandler
     public void reset(){
-        repository.deleteAll();
+        repository.deleteAllInBatch();
     }
 
 }
