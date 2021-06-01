@@ -11,6 +11,7 @@ import org.axonframework.eventsourcing.EventSourcingHandler;
 import org.axonframework.modelling.command.AggregateIdentifier;
 import org.axonframework.modelling.command.AggregateLifecycle;
 import org.axonframework.spring.stereotype.Aggregate;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -24,6 +25,7 @@ public class ProductAggregate {
     private BigDecimal price;
     private Integer quantity;
 
+    private transient ProductMapper mapper;
 
     public ProductAggregate() {
     }
@@ -47,33 +49,28 @@ public class ProductAggregate {
             throw new IllegalStateException("An error took place in CreateProductCommand @CommandHandler method");
     }
 
+    @Autowired
+    public void setMapper(ProductMapper mapper) {
+        this.mapper = mapper;
+    }
+
     @CommandHandler
     public void handle(ReserveProductCommand reserveProductCommand) {
         if (quantity < reserveProductCommand.getQuantity()) {
             throw new IllegalArgumentException("Insufficient number of items in stock");
         }
 
-        ProductReservedEvent productReservedEvent = ProductReservedEvent.builder()
-                .orderId(reserveProductCommand.getOrderId())
-                .productId(reserveProductCommand.getProductId())
-                .quantity(reserveProductCommand.getQuantity())
-                .userId(reserveProductCommand.getUserId())
-                .build();
+        ProductReservedEvent productReservedEvent = mapper.toEvent(reserveProductCommand);
 
         AggregateLifecycle.apply(productReservedEvent);
     }
 
     @CommandHandler
     public void handle(CancelProductReservationCommand cancelProductReservationCommand) {
-        ProductReservationCancelledEvent productReservationCancelledEvent = ProductReservationCancelledEvent.builder()
-                .orderId(cancelProductReservationCommand.getOrderId())
-                .productId(cancelProductReservationCommand.getProductId())
-                .quantity(cancelProductReservationCommand.getQuantity())
-                .userId(cancelProductReservationCommand.getUserId())
-                .reason(cancelProductReservationCommand.getReason())
-                .build();
 
-        AggregateLifecycle.apply(productReservationCancelledEvent);
+        ProductReservationCancelledEvent event = mapper.toEvent(cancelProductReservationCommand);
+
+        AggregateLifecycle.apply(event);
     }
 
     @EventSourcingHandler

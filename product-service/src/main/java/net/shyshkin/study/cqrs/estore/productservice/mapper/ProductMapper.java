@@ -1,5 +1,9 @@
 package net.shyshkin.study.cqrs.estore.productservice.mapper;
 
+import net.shyshkin.study.cqrs.estore.core.commands.CancelProductReservationCommand;
+import net.shyshkin.study.cqrs.estore.core.commands.ReserveProductCommand;
+import net.shyshkin.study.cqrs.estore.core.events.ProductReservationCancelledEvent;
+import net.shyshkin.study.cqrs.estore.core.events.ProductReservedEvent;
 import net.shyshkin.study.cqrs.estore.productservice.command.CreateProductCommand;
 import net.shyshkin.study.cqrs.estore.productservice.command.rest.CreateProductRestModel;
 import net.shyshkin.study.cqrs.estore.productservice.core.data.ProductEntity;
@@ -27,5 +31,9 @@ public interface ProductMapper {
     ProductRestModel toProductRestModel(ProductEntity entity);
 
     ProductLookupEntity toProductLookupEntity(ProductCreatedEvent event);
+
+    ProductReservedEvent toEvent(ReserveProductCommand command);
+
+    ProductReservationCancelledEvent toEvent(CancelProductReservationCommand command);
 
 }
