@@ -8,7 +8,6 @@ import net.shyshkin.study.cqrs.estore.orderservice.core.OrderStatus;
 import net.shyshkin.study.cqrs.estore.orderservice.core.data.OrdersRepository;
 import net.shyshkin.study.cqrs.estore.orderservice.testcontainers.TestComposeContainer;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -40,7 +39,6 @@ import static org.awaitility.Awaitility.await;
 })
 @DirtiesContext
 @Testcontainers
-@Disabled("Temporarily. For step-by-step test fixing")
 class DeadlineIT {
 
     @Container
