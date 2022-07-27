@@ -1,5 +1,5 @@
 [![CircleCI](https://circleci.com/gh/artshishkin/art-kargopolov-cqrs-saga-axon-microservices.svg?style=svg)](https://circleci.com/gh/artshishkin/art-kargopolov-cqrs-saga-axon-microservices)
-[![codecov](https://codecov.io/gh/artshishkin/art-kargopolov-cqrs-saga-axon-microservices/branch/main/graph/badge.svg?token=U5YRYVEM7N)](https://codecov.io/gh/artshishkin/art-kargopolov-cqrs-saga-axon-microservices)
+[![codecov](https://codecov.io/gh/artshishkin/art-kargopolov-cqrs-saga-axon-microservices/branch/master/graph/badge.svg?token=AM57G42WVN)](https://codecov.io/gh/artshishkin/art-kargopolov-cqrs-saga-axon-microservices)
 ![Java CI with Maven](https://github.com/artshishkin/art-kargopolov-cqrs-saga-axon-microservices/workflows/Java%20CI%20with%20Maven/badge.svg)
 [![GitHub issues](https://img.shields.io/github/issues/artshishkin/art-kargopolov-cqrs-saga-axon-microservices)](https://github.com/artshishkin/art-kargopolov-cqrs-saga-axon-microservices/issues)
 ![Spring Boot version][springver]
