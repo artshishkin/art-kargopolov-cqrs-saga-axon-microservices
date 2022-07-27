@@ -22,5 +22,7 @@ jobs:
         java-version: '11'
         distribution: 'temurin'
         cache: maven
+    - name: Build Docker Images
+      run: mvn -B install -Dmaven.test.skip=true --file pom.xml
     - name: Build with Maven
       run: mvn -B verify --file pom.xml
