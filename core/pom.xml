@@ -16,6 +16,7 @@
     <properties>
         <java.version>11</java.version>
         <axon-spring-boot-starter.version>4.5</axon-spring-boot-starter.version>
+        <maven.deploy.skip>true</maven.deploy.skip>
     </properties>
     <dependencies>
         <dependency>
