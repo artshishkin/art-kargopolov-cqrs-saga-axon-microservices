@@ -9,7 +9,7 @@ import org.testcontainers.containers.wait.strategy.Wait;
 })
 public class AxonServerContainer extends GenericContainer<AxonServerContainer> {
 
-    private static final String IMAGE_VERSION = "axoniq/axonserver";
+    private static final String IMAGE_VERSION = "axoniq/axonserver:4.5.1";
     private static AxonServerContainer container;
 
     public AxonServerContainer() {
