@@ -5,7 +5,7 @@ import org.testcontainers.containers.wait.strategy.Wait;
 
 public class AxonServerContainer extends GenericContainer<AxonServerContainer> {
 
-    private static final String IMAGE_VERSION = "axoniq/axonserver";
+    private static final String IMAGE_VERSION = "axoniq/axonserver:4.5.1";
     private static AxonServerContainer container;
 
     public AxonServerContainer() {
@@ -32,8 +32,8 @@ public class AxonServerContainer extends GenericContainer<AxonServerContainer> {
 
         super.start();
 
-        String host = container.getHost();
-        Integer port = container.getMappedPort(8124);
+        String host = this.getHost();
+        Integer port = this.getMappedPort(8124);
         String servers = host + ":" + port;
         System.setProperty("AXON_SERVERS", servers);
 

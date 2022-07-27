@@ -44,6 +44,7 @@ class EventsReplayControllerTest extends AbstractAxonServerTest {
         //given
         long countInit = repository.count();
         long countLookupInit = lookupRepository.count();
+        log.debug("Initially repository has {} items, lookupRepository has {}", countInit, countLookupInit);
 
         int createdProducts = createStubProducts();
 
@@ -68,14 +69,14 @@ class EventsReplayControllerTest extends AbstractAxonServerTest {
         log.debug("Response body: {}", responseBody);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
 
-        await().
-                timeout(3, TimeUnit.SECONDS)
+        await()
+                .timeout(3, TimeUnit.SECONDS)
                 .untilAsserted(() -> {
                     long count = repository.count();
                     log.debug("Product repository contains {} products", count);
                     log.debug("Lookup repository contains {} products", lookupRepository.count());
-                    assertThat(count).isEqualTo(initialCount);
-                    assertThat(lookupRepository.count()).isEqualTo(initialLookupCount);
+                    assertThat(count).isEqualTo(createdProducts);
+                    assertThat(lookupRepository.count()).isEqualTo(createdProducts);
                 });
     }
 
