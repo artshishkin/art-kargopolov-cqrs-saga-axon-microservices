@@ -38,7 +38,7 @@
 
         <docker.image.prefix>artarkatesoft</docker.image.prefix>
         <docker.image.name>cqrs-${project.artifactId}</docker.image.name>
-
+        <maven.deploy.skip>true</maven.deploy.skip>
     </properties>
 
     <dependencies>
@@ -306,17 +306,22 @@
             </activation>
             <build>
                 <plugins>
-                    <!--   push to docker with release-->
                     <plugin>
                         <groupId>io.fabric8</groupId>
                         <artifactId>docker-maven-plugin</artifactId>
                         <executions>
                             <execution>
-                                <id>push-to-docker</id>
+                                <id>build-docker-images</id>
                                 <phase>install</phase>
                                 <goals>
                                     <goal>build</goal>
-<!--                                    <goal>push</goal>-->
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>push-to-docker-hub</id>
+                                <phase>install</phase>
+                                <goals>
+                                    <goal>push</goal>
                                 </goals>
                             </execution>
                         </executions>
