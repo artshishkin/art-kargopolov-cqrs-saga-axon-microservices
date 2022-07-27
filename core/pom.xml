@@ -15,6 +15,7 @@
     <description>Core Module of CQRS Project</description>
     <properties>
         <java.version>11</java.version>
+        <axon-spring-boot-starter.version>4.5</axon-spring-boot-starter.version>
     </properties>
     <dependencies>
         <dependency>
@@ -25,7 +26,7 @@
         <dependency>
             <groupId>org.axonframework</groupId>
             <artifactId>axon-spring-boot-starter</artifactId>
-            <version>4.5</version>
+            <version>${axon-spring-boot-starter.version}</version>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
