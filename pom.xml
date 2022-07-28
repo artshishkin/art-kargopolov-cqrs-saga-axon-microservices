@@ -37,6 +37,7 @@
         <docker.image.name>cqrs-${project.artifactId}</docker.image.name>
         <maven.deploy.skip>true</maven.deploy.skip>
         <axon-spring-boot-starter.version>4.5.14</axon-spring-boot-starter.version>
+        <xstream.version>1.4.19</xstream.version>
         <guava.version>31.1-jre</guava.version>
         <javafaker.version>1.0.2</javafaker.version>
     </properties>
@@ -62,6 +63,11 @@
                 <groupId>org.axonframework</groupId>
                 <artifactId>axon-spring-boot-starter</artifactId>
                 <version>${axon-spring-boot-starter.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.thoughtworks.xstream</groupId>
+                <artifactId>xstream</artifactId>
+                <version>${xstream.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.google.guava</groupId>
