@@ -1,0 +1,26 @@
+# Query product service - Start axon-server docker-compose, discovery-service, api-gateway first
+
+### Get all products
+GET http://localhost:9090/product-service/products
+Accept: application/json
+
+### Get product by id
+GET http://localhost:9090/product-service/products/{{$uuid}}
+Accept: application/json
+
+### Create new product
+POST http://localhost:9090/product-service/products
+Content-Type: application/json
+Accept: application/json
+
+{
+  "title": "Art's test through IDEA HttpClient {{$timestamp}}",
+  "price": 12.5,
+  "quantity": 3
+}
+
+> {% client.global.set("productId", response.body.productId); %}
+
+### Get product by id through productId of previously created product
+GET http://localhost:9090/product-service/products/{{productId}}
+Accept: application/json
