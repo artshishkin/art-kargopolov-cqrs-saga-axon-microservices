@@ -2,6 +2,7 @@ package net.shyshkin.study.cqrs.estore.productservice.core.data;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,10 +17,11 @@ import java.util.UUID;
 @Table(name = "product_lookup")
 public class ProductLookupEntity implements Serializable {
 
-    private static final long serialVersionUID = 3116861566474874478L;
+    private static final long serialVersionUID = -203523508911497034L;
 
     @Id
     @EqualsAndHashCode.Include
+    @Type(type = "uuid-char") //VARCHAR(255) instead of default binary
     private UUID productId;
 
     @Column(unique = true)
