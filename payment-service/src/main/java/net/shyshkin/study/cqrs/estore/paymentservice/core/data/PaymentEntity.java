@@ -1,6 +1,7 @@
 package net.shyshkin.study.cqrs.estore.paymentservice.core.data;
 
 import lombok.*;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -18,6 +19,7 @@ public class PaymentEntity {
 
     @Id
     @EqualsAndHashCode.Include
+    @Type(type = "uuid-char") //VARCHAR(255) instead of default binary
     private UUID paymentId;
 
     private UUID orderId;
