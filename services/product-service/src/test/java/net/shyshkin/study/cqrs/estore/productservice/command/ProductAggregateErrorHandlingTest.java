@@ -4,11 +4,13 @@ import lombok.extern.slf4j.Slf4j;
 import net.shyshkin.study.cqrs.estore.productservice.command.rest.CreateProductRestModel;
 import net.shyshkin.study.cqrs.estore.productservice.commontest.AbstractGlobalAxonServerTest;
 import net.shyshkin.study.cqrs.estore.productservice.core.errorhandling.ErrorMessage;
+import org.assertj.core.data.TemporalUnitLessThanOffset;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.math.BigDecimal;
+import java.time.temporal.ChronoUnit;
 
 import static java.time.LocalDateTime.now;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -42,7 +44,7 @@ class ProductAggregateErrorHandlingTest extends AbstractGlobalAxonServerTest {
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
         assertThat(body)
                 .hasNoNullFieldsOrProperties()
-                .satisfies(errorMess -> assertThat(errorMess.getTimestamp()).isEqualToIgnoringNanos(now()))
+                .satisfies(errorMess -> assertThat(errorMess.getTimestamp()).isCloseTo(now(), new TemporalUnitLessThanOffset(2, ChronoUnit.SECONDS)))
                 .satisfies(errorMess -> assertThat(errorMess.getMessage()).contains(errorMessage));
     }
 
