@@ -3,6 +3,7 @@ package net.shyshkin.study.cqrs.estore.orderservice.core.data;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import net.shyshkin.study.cqrs.estore.orderservice.core.OrderStatus;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.UUID;
@@ -16,6 +17,7 @@ public class OrderEntity {
     @Id
     @Column(unique = true)
     @EqualsAndHashCode.Include
+    @Type(type = "uuid-char") //VARCHAR(255) instead of default binary
     private UUID orderId;
 
     private UUID productId;

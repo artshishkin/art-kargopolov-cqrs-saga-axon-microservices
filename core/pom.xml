@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.4.5</version>
+        <version>2.7.2</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>net.shyshkin.study.cqrs.estore</groupId>
@@ -15,8 +15,9 @@
     <description>Core Module of CQRS Project</description>
     <properties>
         <java.version>11</java.version>
-        <axon-spring-boot-starter.version>4.5</axon-spring-boot-starter.version>
+        <axon-spring-boot-starter.version>4.5.14</axon-spring-boot-starter.version>
         <maven.deploy.skip>true</maven.deploy.skip>
+        <guava.version>31.1-jre</guava.version>
     </properties>
     <dependencies>
         <dependency>
@@ -32,7 +33,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>30.1.1-jre</version>
+            <version>${guava.version}</version>
         </dependency>
 
         <dependency>

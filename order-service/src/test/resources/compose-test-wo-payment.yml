@@ -3,7 +3,7 @@ version: '3'
 services:
   #  docker run -d --name axonserver -p 8024:8024 -p 8124:8124 axoniq/axonserver
   axon-server:
-    image: axoniq/axonserver:4.5.1
+    image: axoniq/axonserver:4.5.3
     ports:
       - 8125:8124
 
