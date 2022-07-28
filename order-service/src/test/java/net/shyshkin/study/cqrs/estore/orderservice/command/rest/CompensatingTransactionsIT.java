@@ -8,7 +8,6 @@ import net.shyshkin.study.cqrs.estore.orderservice.core.OrderStatus;
 import net.shyshkin.study.cqrs.estore.orderservice.core.data.OrdersRepository;
 import net.shyshkin.study.cqrs.estore.orderservice.testcontainers.PaymentFailedComposeContainer;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -37,7 +36,6 @@ import static org.awaitility.Awaitility.await;
         "axon.axonserver.servers=${AXON_SERVERS}"
 })
 @Testcontainers
-@Disabled("com.thoughtworks.xstream.security.ForbiddenClassException: net.shyshkin.study.cqrs.estore.core.events.ProductReservedEvent")
 class CompensatingTransactionsIT {
 
     @Container
