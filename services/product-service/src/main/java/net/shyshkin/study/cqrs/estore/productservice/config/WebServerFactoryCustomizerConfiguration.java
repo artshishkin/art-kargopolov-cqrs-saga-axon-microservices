@@ -3,7 +3,6 @@ package net.shyshkin.study.cqrs.estore.productservice.config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.server.WebServerFactoryCustomizer;
 import org.springframework.boot.web.servlet.server.ConfigurableServletWebServerFactory;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.util.SocketUtils;
 
 //@Configuration

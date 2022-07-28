@@ -5,7 +5,7 @@
 
     <parent>
         <groupId>net.shyshkin.study.cqrs.estore</groupId>
-        <artifactId>art-kargopolov-cqrs-saga-axon-microservices</artifactId>
+        <artifactId>services</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
@@ -17,7 +17,6 @@
         <dependency>
             <groupId>net.shyshkin.study.cqrs.estore</groupId>
             <artifactId>core</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
