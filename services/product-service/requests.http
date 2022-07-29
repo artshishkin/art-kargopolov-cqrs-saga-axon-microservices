@@ -1,4 +1,4 @@
-# Query product service - Start axon-server docker-compose, discovery-service, api-gateway first
+# Query product service - Start axon-server docker-compose, discovery-service, api-gateway first. Then product-service
 
 ### Get all products
 GET http://localhost:9090/product-service/products
