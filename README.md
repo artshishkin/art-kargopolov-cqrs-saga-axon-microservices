@@ -8,9 +8,42 @@
 ![Testcontainers version][testcontainersver]
 ![Project licence][licence]
 
-# art-kargopolov-cqrs-saga-axon-microservices
-Tutorial - Spring Boot Microservices, CQRS, SAGA, Axon Framework - from Sergey Kargopolov (Udemy)
+# Event-Driven Microservices, CQRS, SAGA, Axon, Spring Boot
 
+Tutorial - [Spring Boot Microservices, CQRS, SAGA, Axon Framework](https://www.udemy.com/course/spring-boot-microservices-cqrs-saga-axon-framework/) - from Sergey Kargopolov (Udemy)
+
+### Topics covered by tutorial
+
+- Event-Driven Microservices
+- Basics of Spring Cloud
+- Axon Framework
+- Eureka Discovery Service
+- CQRS Design Pattern
+- Spring Cloud API Gateway
+- SAGA Design Pattern
+- Event Based Messages
+- Transactions
+
+### Description
+
+In this video course, you will learn how to build business logic that spans several **distributed Spring Boot Microservices**.
+
+This course is designed for beginners and we will start from the basics of Microservices, Spring Boot, and **Spring Cloud**.
+
+You will learn how to create your very first Spring Boot Microservice and how to handle HTTP requests. 
+You will then learn how to run multiple instances of your Microservice behind an **API Gateway** and how to make them discoverable. 
+This will help you scale up your microservice up and down as needed.
+
+This video course will also cover **transactions** across multiple distributed Microservices and how to **roll back changes** if an error took place. 
+Transactions is an advanced topic and to be able to build transactional microservices this video course will teach you a few more design patterns. 
+Starting from the very beginning, you will learn how to develop **event-based Microservices** that are absolutely location transparent.
+
+You will learn how to use a modern and very popular framework for building event-based Microservices called Axon. 
+**Axon Framework** is based on design principles such as **CQRS(Command Query Responsibility Segregation)** and **DDD(Domain Driven Design)**. You will learn how to build event-based Microservices using Axon Framework and how to use CQRS and Event Sourcing in your Microservices.
+
+Finally, you will learn about the **Saga design pattern** and how to group multiple operations into a single transaction. This will help you build business logic that spans multiple distributed Microservices and roll back changes if one operation fails.
+
+All from the very beginning, to make these advanced topics easier.
 
 [springver]: https://img.shields.io/badge/dynamic/xml?label=Spring%20Boot&query=%2F%2A%5Blocal-name%28%29%3D%27project%27%5D%2F%2A%5Blocal-name%28%29%3D%27parent%27%5D%2F%2A%5Blocal-name%28%29%3D%27version%27%5D&url=https%3A%2F%2Fraw.githubusercontent.com%2Fartshishkin%2Fart-kargopolov-cqrs-saga-axon-microservices%2Fmaster%2Fpom.xml&logo=Spring&labelColor=white&color=grey
 [axonver]: https://img.shields.io/badge/dynamic/xml?label=Axon%20Server&query=%2F%2A%5Blocal-name%28%29%3D%27project%27%5D%2F%2A%5Blocal-name%28%29%3D%27properties%27%5D%2F%2A%5Blocal-name%28%29%3D%27axon-spring-boot-starter.version%27%5D&url=https%3A%2F%2Fraw.githubusercontent.com%2Fartshishkin%2Fart-kargopolov-cqrs-saga-axon-microservices%2Fmaster%2Fpom.xml&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAIAAAC0Ujn1AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAEnQAABJ0Ad5mH3gAAANMSURBVEhLrZZZT1NBFIAvBhRZwlJjkBgFlMSoD775zIMPPhJJfDMiGGLAqIBBRP0DGg0tXaB7C7WlNCyGELYCrUgrpRRCoexEVCpdQECrSSmecqdwS6f0kvhl0nTOmXydnDl3bokdekxYbdL6RpW6dWNzE4UiQUvtdLmZbIFErhJJ3wvEChSNBC31/MIijy+FXYOdxRGiaCToFoQvauDxZTVcUb/uEwpFgq4asE5Nf1n+hiY0OIL6qODVk7aZ9o4e2/QsmoehQL54q3ZuZf0vmgeDUUOfsbhCoUTB5ol1Hw0oGsKZCkvUg+HjJSYi37Do+IOiFDDqD+1d4IV+gMGtkw7oh1CCgnfbR9wZYpSZGeWjyaVmosA4a/egXAD8rjm1ElLtt/OlfQODKEchvcIS92gE1Mh+zzD1/TfK7YKvdY9WB622Z4fvff0H7ds+H1Qj4THVbpxY2a87Xg30aPV7drmi6fXbGpkc8xzG7NstKeVjRE61ZeYrmfKrrdZJZWMTOafS3avjCUDYxOaJKqteceokuLrv7v2JmfF0PPG2IC6XRdwfnfvhrzshb1ASUbGJKWnxSafJtVR6+/Rv3rHBC4+4rEENdtPIGMpRiC4ejs3jJ+SyTlVOk6e64fESV69dP5d1KTP7ShIjvZrFQWspKFVqvqgevFAZ+AGwo0QQ3sQ8buozG1n36GLT85ZlIufGzbSzWRkXL8ecTNY0t6KVFBSqZjCSRRfLlHD5oQQFjdl9rMSSWub3wiCKPjO1dmLV4Uw/n01Ex+cXFqGFFEAEg/TCD8D15HKvoVwAtclF3DWk7vY4jBMPTRdejkM8bIcAIBUGe51ON8oFCPVmvkCHEVYtkioPeB0OF8oF0JjDegG8GqRBXh54nSgXoG3MfYgXwKjhsq8T1h++XwA6LKU0rBfAqDu6tPAC3N+vE+MF4Hoit4z1Ahj12vpPeMnCU87kCKB/UDSEQvkCFIQoNGZUYbwAvtZer3dufgk+0TwMpqWtTus6moSAV/8X6Krt9tXmto7O7n6fz4dCkaCl9ng81TV8ePVA58Bzj6KRoKWemZ2H25XsGThhFI0ELTWcJ5MjFIj9/3I0Le0oGgm6td769Us/aBwx4/sMw87OPy1FLLbGY8wzAAAAAElFTkSuQmCC&labelColor=white&color=grey
